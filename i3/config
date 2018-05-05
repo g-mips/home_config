@@ -92,21 +92,58 @@ set $gaps-default-o-size 10
 gaps inner $gaps-default-i-size
 gaps outer $gaps-default-o-size
 
+smart_borders on
+
+smart_gaps on
+
 ##
 # Modes
 ##
-mode "gap-resize" {
-     bindsym j gaps inner current minus 5
-     bindsym k gaps inner current plus 5
-     bindsym l gaps outer current minus 5
-     bindsym semicolon gaps outer current plus 5
+set $mode_gaps Gaps: (o) outer gaps mode (i) inner gaps mode (n) none (r) reset
+set $mode_gaps_outer Outer Gaps: (-/j) shrink gaps (+/k) increase gaps (n) no outer gaps (r) reset outer gaps (g) gaps mode
+set $mode_gaps_inner Inner Gaps: (-/j) shrink gaps (+/k) increase gaps (n) no inner gaps (r) reset inner gaps (g) gaps mode
 
-     bindsym o gaps inner current set 0; gaps outer current set 0
+mode "$mode_gaps" {
+     bindsym o mode "$mode_gaps_outer"
+     bindsym i mode "$mode_gaps_inner"
+
+     bindsym n gaps inner current set 0; gaps outer current set 0
      bindsym r gaps inner current set $gaps-default-i-size; gaps outer current set $gaps-default-o-size
 
      bindsym Escape mode "default"
      bindsym Return mode "default"
-     bindsym $mod+g mode "default"
+}
+
+mode "$mode_gaps_inner" {
+     bindsym j gaps inner current minus 5
+     bindsym minus gaps inner current minus 5
+
+     bindsym k gaps inner current plus 5
+     bindsym plus gaps inner current plus 5
+
+     bindsym n gaps inner current set 0
+     bindsym r gaps inner current set $gaps-default-i-size
+
+     bindsym g mode "$mode_gaps"
+
+     bindsym Escape mode "default"
+     bindsym Return mode "default"
+}
+
+mode "$mode_gaps_outer" {
+     bindsym l gaps outer current minus 5
+     bindsym minus gaps outer current minus 5
+
+     bindsym semicolon gaps outer current plus 5
+     bindsym plus gaps outer current plus 5
+
+     bindsym n gaps outer current set 0
+     bindsym r gaps outer current set $gaps-default-o-size
+
+     bindsym g mode "$mode_gaps"
+
+     bindsym Escape mode "default"
+     bindsym Return mode "default"
 }
 
 mode "resize" {
@@ -160,7 +197,7 @@ bindsym $mod+$shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortc
 bindsym $mod+f fullscreen toggle
 #bindsym $mod+$shift+f
 
-bindsym $mod+g mode "gap-resize"
+bindsym $mod+g mode "$mode_gaps"
 #bindsym $mod+$shift+g
 
 bindsym $mod+h split h
