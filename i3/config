@@ -65,6 +65,23 @@ set $submod Mod1
 font pango:mono 8
 for_window [class="^.*"] border pixel 3
 
+# Set colors from Xresources
+# Change 'color7' and 'color2' to whatever colors you want i3 to use 
+# from the generated scheme.
+# NOTE: The '#f0f0f0' in the lines below is the color i3 will use if
+# it fails to get colors from Xresources.
+set_from_resource $fg i3wm.color7 #f0f0f0
+set_from_resource $bg i3wm.color2 #f0f0f0
+
+# class                 border  backgr. text indicator child_border
+client.focused          $bg     $bg     $fg  $bg       $bg
+client.focused_inactive $bg     $bg     $fg  $bg       $bg
+client.unfocused        $bg     $bg     $fg  $bg       $bg
+client.urgent           $bg     $bg     $fg  $bg       $bg
+client.placeholder      $bg     $bg     $fg  $bg       $bg
+
+client.background       $bg
+
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
@@ -113,7 +130,6 @@ mode "resize" {
 # Init Applications
 ####################################
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh &
-exec_always feh -x --bg-scale ~/.config/feh/current
 exec_always compton -b --config ~/.config/compton/config
 
 ####################################
