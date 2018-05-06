@@ -156,9 +156,11 @@ monitor = ${env:MONITOR2}
 type = internal/xbacklight
 format = <ramp> <bar>
 
-ramp-0 = 
-ramp-1 = 
-ramp-2 = 
+ramp-0 = 🌕
+ramp-1 = 🌔
+ramp-2 = 🌓
+ramp-3 = 🌒
+ramp-4 = 🌑
 
 bar-width = 10
 bar-indicator = |
@@ -256,7 +258,7 @@ ramp-coreload-7-foreground = #ff5555
 type = internal/date
 
 ; http://en.cppreference.com/w/cpp/io/manip/put_time
-date = %%{F#fff}(%V) %A, %d %B %Y  %%{F#fff}%H:%M%%{F#666}:%%{F#fba922}%S%%{F-}
+date = %%{F#fff}%A, %d %B %Y  %%{F#fff}%H:%M%%{F#666}:%%{F#fba922}%S%%{F-}
 date-alt =    %%{F#99}%Y-%m-%d%%{F-}  %%{F#fff}%H:%M%%{F-}
 
 ;-------------------------------------------------
