@@ -358,6 +358,14 @@ bindsym $mod+$shift+semicolon move right
 #bindsym $mod+slash
 #bindsym $mod+$shift+slash
 
+## [ { ] } \ |
+bindsym $mod+bracketleft exec --no-startup-id wal --iterative -i /usr/local/share/backgrounds/wallpapers/
+bindsym $mod+$shift+bracketleft exec i3-input -F 'exec wal --iterative -i /usr/local/share/backgrounds/wallpapers/%s.jpg' -P 'Enter in the desired wallpaper theme: '
+bindsym $mod+bracketright exec --no-startup-id wal --theme random
+bindsym $mod+$shift+bracketright exec i3-input -F 'exec --no-startup-id wal --theme %s' -P 'Enter in the desired theme: '
+#bindsym $mod+bar
+#bindsym $mod+$shift+bar
+
 bindsym $mod+space focus mode_toggle
 bindsym $mod+$shift+space floating toggle
 
