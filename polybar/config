@@ -41,8 +41,9 @@ font-1 = MaterialIcons:size=10;0
 font-2 = Termsynu:size=8:antialias=false;-2
 font-3 = FontAwesome:size=11;0
 
-modules-center = date
-modules-right = volume battery
+modules-left = wireless-network wired-network date
+modules-center = title
+modules-right = volume battery backlight
 
 [bar/minimal-top0]
 inherit = bar/minimal-top
@@ -86,8 +87,9 @@ font-1 = MaterialIcons:size=10;0
 font-2 = Termsynu:size=8:antialias=false;-2
 font-3 = FontAwesome:size=9;0
 
+modules-left = xkeyboard
 modules-center = i3
-modules-right = backlight wireless-network wired-network cpu
+modules-right =  cpu memory temperature filesystem
 
 [bar/minimal-bottom0]
 inherit = bar/minimal-bottom
