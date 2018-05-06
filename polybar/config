@@ -270,9 +270,9 @@ date-alt =    %%{F#99}%Y-%m-%d%%{F-}  %%{F#fff}%H:%M%%{F-}
 [module/memory]
 type = internal/memory
 format = <label> <bar-used>
-label = RAM
+label = RAM %gb_used% / %gb_total%
 
-bar-used-width = 30
+bar-used-width = 20
 bar-used-foreground-0 = #aaff77
 bar-used-foreground-1 = #aaff77
 bar-used-foreground-2 = #fba922
