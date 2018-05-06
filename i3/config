@@ -63,7 +63,8 @@ set $submod Mod1
 # Styles
 ##
 font pango:mono 8
-for_window [class="^.*"] border pixel 3
+#for_window [class="^.*"] border pixel 3
+for_window [class="^.*"] border none
 
 # Set colors from Xresources
 # Change 'color7' and 'color2' to whatever colors you want i3 to use 
@@ -92,9 +93,9 @@ set $gaps-default-o-size 10
 gaps inner $gaps-default-i-size
 gaps outer $gaps-default-o-size
 
-smart_borders on
+#smart_borders on
 
-smart_gaps on
+#smart_gaps on
 
 ##
 # Modes
