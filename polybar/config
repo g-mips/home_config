@@ -100,7 +100,7 @@ animation-charging-framerate = 750
 type = internal/cpu
 interval = 0.5
 format = <label> <ramp-coreload>
-label = CPU
+label = CPU %percentage-cores%
 
 ramp-coreload-0 = ▁
 ramp-coreload-0-font = 2
