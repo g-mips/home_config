@@ -216,13 +216,13 @@ bindsym $mod+$shift+k move down
 bindsym $mod+l focus up
 bindsym $mod+$shift+l move up
 
-# System mute
-#bindsym $mod+m
+bindsym $mod+m exec --no-startup-id amixer set Master toggle
 #bindsym $mod+$shift+m
 
-# System volume
-#bindsym $mod+n
-#bindsym $mod+$shift+n
+bindsym $mod+n exec --no-startup-id amixer set Master 5%+
+bindsym $mod+$shift+n exec --no-startup-id amixer set Master 5%-
+bindsym $mod+$control+n exec --no-startup-id amixer set Master 1%+
+bindsym $mod+$control+$shift+n exec --no-startup-id amixer set Master 1%-
 
 #bindsym $mod+o
 #bindsym $mod+$shift+o
@@ -258,7 +258,7 @@ bindsym $mod+w layout tabbed
 #bindsym $mod+$shift+y
 
 #bindsym $mod+z
-#bindsym $mod+$shift+z
+bindsym $mod+$shift+z exec		 ~/.config/i3/lock.sh
 
 ##
 # Number/Symbol Bindings
