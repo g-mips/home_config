@@ -42,9 +42,11 @@ font-1 = MaterialIcons:size=10;0
 font-2 = Termsynu:size=8:antialias=false;-2
 font-3 = FontAwesome:size=11;0
 
-modules-left = wireless-network wired-network date
+;wireless-network wired-network 
+modules-left = date i3mode
 modules-center = title
-modules-right = volume battery backlight
+modules-right = volume battery
+;backlight
 
 [bar/minimal-top0]
 inherit = bar/minimal-top
@@ -458,7 +460,7 @@ date = %%{F#999}%Y-%m-%d%%{F-}  %%{F#fff}%H:%M%%{F-}
 
 [module/i3]
 type = internal/i3
-format = <label-state> <label-mode>
+format = <label-state>
 index-sort = false
 wrapping-scroll = false
 
@@ -466,9 +468,6 @@ ws-icon-default = 
 
 ; Only show workspaces on the same output as the bar
 pin-workspaces = true
-
-label-mode-padding = 4
-label-mode-foreground = ${colors.foreground}
 
 ; focused = Active workspace on focused monitor
 label-focused = 
@@ -486,6 +485,19 @@ label-visible-padding = ${self.label-focused-padding}
 label-urgent = %icon%
 label-urgent-background = $bd2c40
 label-urgent-padding = 3
+
+[module/i3mode]
+type = internal/i3
+format = <label-state><label-mode>
+
+label-mode-padding = 4
+label-mode-background = ${colors.background}
+label-mode-foreground = ${colors.foreground}
+
+label-visible =
+label-urgent =
+label-focused =
+label-unfocused =
 
 ;-------------------------------------------------
 ;
