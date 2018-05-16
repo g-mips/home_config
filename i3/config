@@ -69,7 +69,6 @@ set $submod Mod1
 # Styles
 ##
 font pango:mono 8
-#for_window [class="^.*"] border pixel 3
 for_window [class="^.*"] border none
 
 # Set colors from Xresources
@@ -98,10 +97,6 @@ set $gaps-default-o-size 10
 
 gaps inner $gaps-default-i-size
 gaps outer $gaps-default-o-size
-
-#smart_borders on
-
-#smart_gaps on
 
 ##
 # Modes
@@ -182,8 +177,7 @@ bindsym $mod+a focus parent
 bindsym $mod+$shift+a focus child
 
 # Browser
-# TODO(Grant): Browser env variable
-bindsym $mod+b exec --no-startup-id vivaldi-stable
+bindsym $mod+b exec --no-startup-id $BROWSER
 #bindsym $mod+$shift+b
 
 #bindsym $mod+c
