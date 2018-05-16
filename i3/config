@@ -45,6 +45,12 @@
 #################################################################
 
 ####################################
+# Init Applications
+####################################
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh &
+exec_always compton -b --config ~/.config/compton/config
+
+####################################
 # Mod variables
 ####################################
 set $shift Shift
@@ -163,12 +169,6 @@ mode "resize" {
         bindsym Escape mode "default"
         bindsym $mod+r mode "default"
 }
-
-####################################
-# Init Applications
-####################################
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh &
-exec_always compton -b --config ~/.config/compton/config
 
 ####################################
 # Common keybindings
