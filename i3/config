@@ -2,46 +2,46 @@
 # Key Names:
 #
 # Letters --
-#  'q' -- 24, 'w' -- 25, 'e' -- 26, 'r' -- 27, 't' -- 28, 'y' -- 29, 'u' -- 30, 'i' -- 31, 'o' -- 32, 'p' -- 33
-#  'a' -- 38, 's' -- 39, 'd' -- 40, 'f' -- 41, 'g' -- 42, 'h' -- 43,  'j' -- 44, 'k' -- 45, 'l' -- 46
-#  'z' -- 52, 'x' -- 53, 'c' -- 54, 'v' -- 55, 'b' -- 56, 'n' -- 57, 'm' -- 58
+#  'q' - 24, 'w' - 25, 'e' - 26, 'r' - 27, 't' - 28, 'y' - 29, 'u' - 30, 'i' - 31, 'o' - 32, 'p' - 33
+#  'a' - 38, 's' - 39, 'd' - 40, 'f' - 41, 'g' - 42, 'h' - 43,  'j' - 44, 'k' - 45, 'l' - 46
+#  'z' - 52, 'x' - 53, 'c' - 54, 'v' - 55, 'b' - 56, 'n' - 57, 'm' - 58
 #
 # Numbers/Symbols --
-# '1'/'exclam' -- 10, '2'/'at' -- 11, '3'/'numbersign' -- 12, '4'/'dollar' -- 13, '5'/'percent' -- 14,
-# '6'/'asciicircum' -- 15, '7'/'ampersand' -- 16, '8'/'asterisk' -- 17, '9'/'parenleft' -- 18, '0'/'parenright' -- 19
+# '1'/'exclam' - 10, '2'/'at' - 11, '3'/'numbersign' - 12, '4'/'dollar' - 13, '5'/'percent' - 14,
+# '6'/'asciicircum' - 15, '7'/'ampersand' - 16, '8'/'asterisk' - 17, '9'/'parenleft' - 18, '0'/'parenright' - 19
 #
 # (Note -- These need to be coupled with Num_Lock
-# 'KP_7' -- 79, 'KP_8' -- 80, 'KP_9' -- 81,
-# 'KP_4 -- 83, 'KP_5' -- 84, 'KP_6' -- 85,
-# 'KP_1' -- 87, 'KP_2' -- 88, 'KP_3' -- 89,
-# 'KP_Decimal' -- 91
+# 'KP_7' - 79, 'KP_8' - 80, 'KP_9' - 81,
+# 'KP_4 - 83, 'KP_5' - 84, 'KP_6' - 85,
+# 'KP_1' - 87, 'KP_2' - 88, 'KP_3' - 89,
+# 'KP_Decimal' - 91
 #
 # Symbols --
-# 'grave'/'asciitilde' -- 49, 'minus'/'underscore' -- 20, 'equal'/'plus' -- 21, 'bracketleft'/'braceleft' -- 34,
-# 'bracketright'/'braceright' -- 35, 'backslash'/'bar' -- 51, 'semicolon'/'colon' -- 47,
-# 'apostrophe'/'quotedbl' -- 48, 'comma'/'less' -- 59, 'period'/'greater -- 60, 'slash'/'question' -- 61,
-# 'space' -- 65, 'KP_Divide' -- 106,  'KP_Multiply' -- 63, 'KP_Subtract' -- 82,  'KP_Add' -- 86,
-# 'KP_Enter' -- 104
+# 'grave'/'asciitilde' - 49, 'minus'/'underscore' - 20, 'equal'/'plus' - 21, 'bracketleft'/'braceleft' - 34,
+# 'bracketright'/'braceright' - 35, 'backslash'/'bar' - 51, 'semicolon'/'colon' - 47,
+# 'apostrophe'/'quotedbl' - 48, 'comma'/'less' - 59, 'period'/'greater - 60, 'slash'/'question' - 61,
+# 'space' - 65, 'KP_Divide' - 106,  'KP_Multiply' - 63, 'KP_Subtract' - 82,  'KP_Add' - 86,
+# 'KP_Enter' - 104
 #
 # Function Keys --
-# 'F1' -- 67, 'F2' -- 68, 'F3' -- 69, 'F4' -- 70, 'F5' -- 71, 'F6' -- 72, 'F7' -- 73, 'F8' -- 74, 'F9' -- 75,
-# 'F10' -- 76, 'F11' -- 77, 'F12' -- 78
+# 'F1' - 67, 'F2' - 68, 'F3' - 69, 'F4' - 70, 'F5' - 71, 'F6' - 72, 'F7' - 73, 'F8' - 74, 'F9' - 75,
+# 'F10' - 76, 'F11' - 77, 'F12' - 78
 #
 # Non-Printable Keys --
-# 'Escape' -- 9, 'BackSpace' -- 22, 'Tab' -- 23, 'Return' -- 36, 'Print' -- 107, 'Home' -- 110, 'Up' -- 111,
-# 'Prior' -- 112, 'Left' -- 113, 'Right' -- 114, 'End' -- 115, 'Down' -- 116, 'Next' -- 117, 'Delete' -- 119,
-# 'Pause' -- 127, 'Menu' -- 135
+# 'Escape' - 9, 'BackSpace' - 22, 'Tab' - 23, 'Return' - 36, 'Print' - 107, 'Home' - 110, 'Up' - 111,
+# 'Prior' - 112, 'Left' - 113, 'Right' - 114, 'End' - 115, 'Down' - 116, 'Next' - 117, 'Delete' - 119,
+# 'Pause' - 127, 'Menu' - 135
 #
 ##########
 # Mod Key Names:
-# 'Shift' -- shift :: Shift_L (0x32, Shift_R (0x3e)
-# ?? -- lock :: Caps_Lock (0x42)
-# 'Control' -- control :: Control_L (0x25),  Control_R (0x69)
-# 'Mod1' -- mod1 :: Alt_L (0x40),  Alt_R (0x6c),  Meta_L (0xcd)
-# 'Mod2' -- mod2 :: Num_Lock (0x4d)
-# 'Mod3' -- ...nothing...
-# 'Mod4' -- mod4 ::  Super_L (0x85),  Super_R (0x86),  Super_L (0xce),  Hyper_L (0xcf)
-# 'Mod5' -- mod5 :: ISO_Level3_Shift (0x5c),  Mode_switch (0xcb)
+# 'Shift' - shift :: Shift_L (0x32, Shift_R (0x3e)
+# ?? - lock :: Caps_Lock (0x42)
+# 'Control' - control :: Control_L (0x25),  Control_R (0x69)
+# 'Mod1' - mod1 :: Alt_L (0x40),  Alt_R (0x6c),  Meta_L (0xcd)
+# 'Mod2' - mod2 :: Num_Lock (0x4d)
+# 'Mod3' - ...nothing...
+# 'Mod4' - mod4 ::  Super_L (0x85),  Super_R (0x86),  Super_L (0xce),  Hyper_L (0xcf)
+# 'Mod5' - mod5 :: ISO_Level3_Shift (0x5c),  Mode_switch (0xcb)
 #################################################################
 
 ####################################
@@ -104,6 +104,19 @@ gaps outer $gaps-default-o-size
 set $mode_gaps Gaps: (o) outer gaps mode (i) inner gaps mode (n) none (r) reset
 set $mode_gaps_outer Outer Gaps: (-/j) shrink gaps (+/k) increase gaps (n) no outer gaps (r) reset outer gaps (g) gaps mode
 set $mode_gaps_inner Inner Gaps: (-/j) shrink gaps (+/k) increase gaps (n) no inner gaps (r) reset inner gaps (g) gaps mode
+
+mode "system" {
+     bindsym s $shutdown
+     bindsym r $restart
+     bindsym l $lock
+     bindsym o $logout
+     bindsym h $sleep
+
+     set $killnag exec --no-startup-id killall i3-nagbar
+     bindsym Escape $killnag ; mode "default"
+     bindsym Return $killnag ; mode "default"
+     bindsym $mod+Escape $killnag ; mode "default"
+}
 
 mode "$mode_gaps" {
      bindsym o mode "$mode_gaps_outer"
@@ -380,23 +393,12 @@ bindsym $mod+Return exec urxvt
 #bindsym $mod+KP_Enter
 #bindsym $mod+$shift+KP_Enter
 
-mode "system" {
-     bindsym s $shutdown
-     bindsym r $restart
-     bindsym l $lock
-     bindsym o $logout
-     bindsym h $sleep
-
-     set $killnag exec --no-startup-id killall i3-nagbar
-     bindsym Escape $killnag ; mode "default"
-     bindsym Return $killnag ; mode "default"
-     bindsym $mod+Escape $killnag ; mode "default"
-}
-
 bindsym $mod+Escape exec "i3-nagbar -t warning -m '(s)hutdown (r)estart (l)ock l(o)gout (h)ibernate'"; mode "system"
 bindsym $mod+Tab workspace back_and_forth
+
+
 ####################################
-# Less common keybindings
+# Unused Bindings
 ####################################
 
 ##
