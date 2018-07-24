@@ -47,7 +47,7 @@
 ####################################
 # Init Applications
 ####################################
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh &
+exec_always --no-startup-id $HOME/.config/polybar/launch-i3.sh &
 exec_always compton -b --config ~/.config/compton/config
 
 ####################################
@@ -104,18 +104,17 @@ gaps outer $gaps-default-o-size
 set $mode_gaps Gaps: (o) outer gaps mode (i) inner gaps mode (n) none (r) reset
 set $mode_gaps_outer Outer Gaps: (-/j) shrink gaps (+/k) increase gaps (n) no outer gaps (r) reset outer gaps (g) gaps mode
 set $mode_gaps_inner Inner Gaps: (-/j) shrink gaps (+/k) increase gaps (n) no inner gaps (r) reset inner gaps (g) gaps mode
+set $system System Control: (s)hutdown (r)estart (l)ogout (h)ibernate
 
-mode "system" {
+mode "$system" {
      bindsym s $shutdown
      bindsym r $restart
-     bindsym l $lock
-     bindsym o $logout
+     bindsym l $logout
      bindsym h $sleep
 
-     set $killnag exec --no-startup-id killall i3-nagbar
-     bindsym Escape $killnag ; mode "default"
-     bindsym Return $killnag ; mode "default"
-     bindsym $mod+Escape $killnag ; mode "default"
+     bindsym Escape mode "default"
+     bindsym Return mode "default"
+     bindsym $mod+Escape mode "default"
 }
 
 mode "$mode_gaps" {
@@ -161,7 +160,9 @@ mode "$mode_gaps_outer" {
      bindsym Return mode "default"
 }
 
-mode "resize" {
+set  $resize Resize Window: (j) Shrink width by 10px (k) Grow height by 10px (l) Shrink height by 10px (;) Grow width by 10px (Shift+Character) Shrink/Grow width/height by 1px
+
+mode "$resize" {
         bindsym j resize shrink width 10 px or 10 ppt
         bindsym k resize grow height 10 px or 10 ppt
         bindsym l resize shrink height 10 px or 10 ppt
@@ -240,7 +241,7 @@ bindsym $mod+$control+$shift+n exec --no-startup-id amixer set Master 1%-
 #bindsym $mod+q
 bindsym $mod+$shift+q kill
 
-bindsym $mod+r mode "resize"
+bindsym $mod+r mode "$resize"
 bindsym $mod+$shift+r restart
 
 bindsym $mod+s layout stacking
@@ -393,7 +394,7 @@ bindsym $mod+Return exec urxvt
 #bindsym $mod+KP_Enter
 #bindsym $mod+$shift+KP_Enter
 
-bindsym $mod+Escape exec "i3-nagbar -t warning -m '(s)hutdown (r)estart (l)ock l(o)gout (h)ibernate'"; mode "system"
+bindsym $mod+Escape mode "$system"
 bindsym $mod+Tab workspace back_and_forth
 
 
