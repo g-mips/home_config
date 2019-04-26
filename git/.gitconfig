@@ -15,6 +15,7 @@
 	pur = pull --rebase
 	lob = log --branches --graph --oneline
 	loo = log --oneline --graph
+	dc = diff --cached
 
 [core]
 	editor = /usr/bin/vim
