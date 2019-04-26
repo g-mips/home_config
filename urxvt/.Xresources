@@ -24,11 +24,16 @@ URxvt*scrollTtyKeypress: true
 URxvt.secondaryScreen: 1
 URxvt.secondaryScroll: 0
 
-URxvt.font: xft:monospace:size=10
-!URxvt.font: xft:Noto Sans Light:size=10
+URxvt*font: xft:Monospace:pixelsize=14
+URxvt*boldFont: xft:Monospace:pixelsize=14
 
+URxvt*letterSpace: -1
+
+URxvt.scrollStyle: rxvt
 URxvt.scrollBar: false
 
 URxvt.lineSpace: 0
 
 URxvt.internalBorder: 20
+
+URxvt.loginShell: true
