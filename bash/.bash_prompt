@@ -1,0 +1,62 @@
+TITLEBAR='\[\033]0;\u@\h:\w\007\]'
+RESET="\033[0m"
+PURPLE="\033[0;35m"
+GREEN="\033[0;32m"
+RED="\033[0;31m"
+
+dir_is_git_repo () {
+    git rev-parse --is-inside-work-tree &> /dev/null
+}
+
+display_opening_parenthesis () {
+    if dir_is_git_repo
+    then
+        echo -n " ("
+    fi
+}
+
+display_closing_parenthesis () {
+    if dir_is_git_repo
+    then
+        echo -n ")"
+    fi
+}
+
+git_status () {
+    if dir_is_git_repo
+    then
+        local STATUS=$(git status -uno --short 2> /dev/null)
+
+        if [ -n "$STATUS" ]
+        then
+            echo -n " $RED*$RESET"
+        fi
+    fi
+}
+
+git_branch () {
+    if dir_is_git_repo
+    then
+        local BRANCH=$(git branch | grep "\*" | rev | cut -d' ' -f1 | rev | cut -d')' -f1)
+
+        echo -n "$GREEN$BRANCH$RESET"
+    fi
+}
+
+# TODO(Grant): git rev-parse --verify --quiet refs/stash >/dev/null
+prompt () {
+    local EXIT="$?"
+    local EXIT_COLOR=$GREEN
+
+    if [ $EXIT != 0 ]
+    then
+        EXIT_COLOR=$RED
+    fi
+
+    PS1="    \[$GREEN\]└─\[$RESET\]\[$EXIT_COLOR\]■\[$RESET\] "
+    echo -e -n " ($GREEN$SHLVL$RESET) $GREEN┌─$RESET[$PURPLE$USER@$HOSTNAME$RESET]"
+    echo -e -n "[$GREEN$(basename $PWD)$RESET]"
+    echo -e "$(display_opening_parenthesis)$(git_branch)$(git_status)$(display_closing_parenthesis)"
+}
+
+PROMPT_COMMAND='prompt'
