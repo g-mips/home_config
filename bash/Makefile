@@ -1,5 +1,3 @@
-# Prerequisites:
-# sed
 .PHONY: all
 all: load_bash load_inputrc clean
 

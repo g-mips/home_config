@@ -1,5 +1,3 @@
-# Prerequisites:
-# xrdb, sed, cpp (gcc)
 .PHONY: all
 all: load_xresources clean
 
