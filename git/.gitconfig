@@ -26,13 +26,13 @@
 	ui = true
 
 [diff]
-	tool = /usr/bin/vimdiff
+	tool = vimdiff
 
 [difftool]
 	prompt = false
 
 [merge]
-	tool = /usr/bin/vimdiff
+	tool = vimdiff
 	conflictstyle = diff3
 
 [mergetool]
