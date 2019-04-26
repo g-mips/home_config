@@ -1,0 +1,52 @@
+[alias]
+	st = status
+	stu = status -uno
+	co = checkout
+	cob = checkout -b
+	ci = commit
+	cinv = commit --no-verify
+	cine = commit --no-edit
+	cia = commit --amend
+	ciae = commit --amend --no-edit
+	ciav = commit --amend --no-verify
+	ciaev = commit --amend --no-edit --no-verify
+	mff = merge --ff-only
+	ri = rebase -i
+	pur = pull --rebase
+	lob = log --branches --graph --oneline
+	loo = log --oneline --graph
+
+[core]
+	editor = /usr/bin/vim
+	pager = /usr/bin/less -+$LESS -R
+	whitespace = blank-at-eol,space-before-tab,blank-at-eof,tabwidth=8
+	safecrlf = warn
+
+[color]
+	ui = true
+
+[diff]
+	tool = /usr/bin/vimdiff
+
+[difftool]
+	prompt = false
+
+[merge]
+	tool = /usr/bin/vimdiff
+	conflictstyle = diff3
+
+[mergetool]
+	prompt = false
+
+[grep]
+	lineNumber = true
+
+[log]
+	decorate = auto
+
+[rebase]
+	autoStash = true
+	abbreviateCommands = true
+
+[status]
+	showStash = true
