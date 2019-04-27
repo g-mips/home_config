@@ -10,11 +10,13 @@ include $(CONFIG_FILE)
 all: /home/$(USER)/.gitconfig clean
 
 /home/$(USER)/.gitconfig: /home/$(USER)/.config/git/.gitconfig
-	cp /home/$(USER)/.config/git/.gitconfig.default /home/$(USER)/.config/git/.gitconfig.default.tmp
+	cp /home/$(USER)/.config/git/.gitconfig.default \
+	/home/$(USER)/.config/git/.gitconfig.default.tmp
 	sed -i "s|USER|$(USER)|" /home/$(USER)/.config/git/.gitconfig.default.tmp
 	sed -i "s|EMAIL|$(EMAIL)|" /home/$(USER)/.config/git/.gitconfig.default.tmp
 	sed -i "s|NAME|$(NAME)|" /home/$(USER)/.config/git/.gitconfig.default.tmp
-	cp /home/$(USER)/.config/git/.gitconfig.default.tmp /home/$(USER)/.gitconfig
+	cp /home/$(USER)/.config/git/.gitconfig.default.tmp \
+	/home/$(USER)/.gitconfig
 
 .PHONY: clean
 clean:
