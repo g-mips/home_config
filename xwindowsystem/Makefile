@@ -9,4 +9,4 @@ load_xresources: /home/$(USER)/.config/xwindowsystem/.Xresources
 
 .PHONY: clean
 clean:
-	rm /home/$(USER)/.config/xwindowsystem/.Xresources.default.tmp
+	-rm /home/$(USER)/.config/xwindowsystem/.Xresources.default.tmp

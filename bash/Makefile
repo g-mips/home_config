@@ -15,5 +15,5 @@ load_inputrc: /home/$(USER)/.config/bash/.inputrc
 
 .PHONY: clean
 clean:
-	rm /home/$(USER)/.config/bash/.bashrc.default.tmp
-	rm /home/$(USER)/.config/bash/.inputrc.default.tmp
+	-rm /home/$(USER)/.config/bash/.bashrc.default.tmp
+	-rm /home/$(USER)/.config/bash/.inputrc.default.tmp

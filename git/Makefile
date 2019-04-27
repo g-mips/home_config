@@ -18,8 +18,8 @@ load_git: /home/$(USER)/.config/git/.gitconfig
 
 .PHONY: clean
 clean:
-	rm /home/$(USER)/.config/git/.gitconfig.default.tmp
+	-rm /home/$(USER)/.config/git/.gitconfig.default.tmp
 
 .PHONY: hard_clean
 hard_clean: clean
-	rm $(CONFIG_FILE)
+	-rm $(CONFIG_FILE)
