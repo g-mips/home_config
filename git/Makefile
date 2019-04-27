@@ -1,4 +1,6 @@
-CONFIG_FILE = /home/$(USER)/.config/git/configuration
+ROOT := $(shell echo $(CURDIR))
+
+CONFIG_FILE = $(ROOT)/configuration
 
 ifeq ("","$(wildcard $(CONFIG_FILE))")
 $(error "Please run ./configure first")
@@ -7,20 +9,18 @@ endif
 include $(CONFIG_FILE)
 
 .PHONY: all
-all: /home/$(USER)/.gitconfig clean
+all: $(HOME)/.gitconfig clean
 
-/home/$(USER)/.gitconfig: /home/$(USER)/.config/git/.gitconfig
-	cp /home/$(USER)/.config/git/.gitconfig.default \
-	/home/$(USER)/.config/git/.gitconfig.default.tmp
-	sed -i "s|USER|$(USER)|" /home/$(USER)/.config/git/.gitconfig.default.tmp
-	sed -i "s|EMAIL|$(EMAIL)|" /home/$(USER)/.config/git/.gitconfig.default.tmp
-	sed -i "s|NAME|$(NAME)|" /home/$(USER)/.config/git/.gitconfig.default.tmp
-	cp /home/$(USER)/.config/git/.gitconfig.default.tmp \
-	/home/$(USER)/.gitconfig
+$(HOME)/.gitconfig: $(ROOT)/.gitconfig
+	cp $(ROOT)/.gitconfig.default $(ROOT)/.gitconfig.default.tmp
+	sed -i "s|USER|$(USER)|" $(ROOT)/.gitconfig.default.tmp
+	sed -i "s|EMAIL|$(EMAIL)|" $(ROOT)/.gitconfig.default.tmp
+	sed -i "s|NAME|$(NAME)|" $(ROOT)/.gitconfig.default.tmp
+	cp $(ROOT)/.gitconfig.default.tmp $(HOME)/.gitconfig
 
 .PHONY: clean
 clean:
-	-rm /home/$(USER)/.config/git/.gitconfig.default.tmp
+	-rm $(ROOT)/.gitconfig.default.tmp
 
 .PHONY: hard_clean
 hard_clean: clean

@@ -1,23 +1,21 @@
-.PHONY: all
-all: /home/$(USER)/.bashrc /home/$(USER)/.inputrc clean
+ROOT := $(shell echo $(CURDIR))
 
-/home/$(USER)/.bashrc: /home/$(USER)/.config/bash/.bashrc
-	cp /home/$(USER)/.config/bash/.bashrc.default \
-	/home/$(USER)/.config/bash/.bashrc.default.tmp
-	sed -i "s|USER|$(USER)|" /home/$(USER)/.config/bash/.bashrc.default.tmp
-	cp /home/$(USER)/.config/bash/.bashrc.default.tmp \
-	/home/$(USER)/.bashrc
+.PHONY: all
+all: $(HOME)/.bashrc $(HOME)/.inputrc clean
+
+$(HOME)/.bashrc: $(ROOT)/.bashrc
+	cp $(ROOT)/.bashrc.default $(ROOT)/.bashrc.default.tmp
+	sed -i "s|USER|$(USER)|" $(ROOT)/.bashrc.default.tmp
+	cp $(ROOT)/.bashrc.default.tmp $(HOME)/.bashrc
 	echo "Please run '. ~/.bashrc' or close and reopen terminal"
 
-/home/$(USER)/.inputrc: /home/$(USER)/.config/bash/.inputrc
-	cp /home/$(USER)/.config/bash/.inputrc.default \
-	/home/$(USER)/.config/bash/.inputrc.default.tmp
-	sed -i "s|USER|$(USER)|" /home/$(USER)/.config/bash/.inputrc.default.tmp
-	cp /home/$(USER)/.config/bash/.inputrc.default.tmp \
-	/home/$(USER)/.inputrc
+$(HOME)/.inputrc: $(ROOT)/.inputrc
+	cp $(ROOT)/.inputrc.default $(ROOT)/.inputrc.default.tmp
+	sed -i "s|USER|$(USER)|" $(ROOT)/.inputrc.default.tmp
+	cp $(ROOT)/.inputrc.default.tmp $(HOME)/.inputrc
 	echo "Please close and reopen terminal"
 
 .PHONY: clean
 clean:
-	-rm /home/$(USER)/.config/bash/.bashrc.default.tmp
-	-rm /home/$(USER)/.config/bash/.inputrc.default.tmp
+	-rm $(ROOT)/.bashrc.default.tmp
+	-rm $(ROOT)/.inputrc.default.tmp
