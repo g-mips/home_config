@@ -7,9 +7,9 @@ endif
 include $(CONFIG_FILE)
 
 .PHONY: all
-all: load_git clean
+all: /home/$(USER)/.gitconfig clean
 
-load_git: /home/$(USER)/.config/git/.gitconfig
+/home/$(USER)/.gitconfig: /home/$(USER)/.config/git/.gitconfig
 	cp /home/$(USER)/.config/git/.gitconfig.default /home/$(USER)/.config/git/.gitconfig.default.tmp
 	sed -i "s|USER|$(USER)|" /home/$(USER)/.config/git/.gitconfig.default.tmp
 	sed -i "s|EMAIL|$(EMAIL)|" /home/$(USER)/.config/git/.gitconfig.default.tmp
