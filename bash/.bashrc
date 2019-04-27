@@ -4,6 +4,20 @@ case $- in
       *) return;;
 esac
 
+# Setup Editors
+export ALTERNATE_EDITOR='/usr/bin/emacs'
+export EDITOR='/usr/bin/vim'
+export VISUAL='/usr/bin/vim'
+
+# Setup browser
+export BROWSER='/usr/bin/qutebrowser'
+
+# Setup pager
+export PAGER='/usr/bin/less'
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -19,46 +33,16 @@ HISTFILESIZE=2000
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
+# Turn off CTRL-S and CTRL-Q. They are annoying and unneeded.
+stty -ixon
+
 # If set, the pattern "**" used in a pathname expansion context will
 # match all files and zero or more directories and subdirectories.
 #shopt -s globstar
 
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm|xterm-color|*-256color) color_prompt=yes;;
-esac
-
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
-
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
 if [ -f ~/.config/bash/.bash_aliases ]; then
 	. ~/.config/bash/.bash_aliases
 fi
@@ -78,12 +62,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export ALTERNATE_EDITOR='/usr/bin/emacs'
-export EDITOR='/usr/bin/vim'
-export VISUAL='/usr/bin/vim'
-
 SSH_ENV="$HOME/.ssh/environment"
-
 function start_agent {
      echo "Initialising new SSH agent..."
      /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
@@ -110,5 +89,3 @@ bind -m vi '"\ee": emacs-editing-mode'
 cgd() {
     cd $(git worktree list | grep "\[$1\]" | cut -d' ' -f1)
 }
-
-stty -ixon

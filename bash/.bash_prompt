@@ -1,3 +1,8 @@
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm|xterm-color|*-256color) color_prompt=yes;;
+esac
+
 TITLEBAR='\[\033]0;\u@\h:\w\007\]'
 RESET="\033[0m"
 PURPLE="\033[0;35m"
