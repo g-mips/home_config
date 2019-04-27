@@ -1,1 +1,1 @@
-$include /home/USER/.config/bash/.inputrc
+$include BASE/bash/.inputrc

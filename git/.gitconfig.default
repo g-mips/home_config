@@ -1,5 +1,5 @@
 [include]
-	path = /home/USER/.config/git/.gitconfig
+	path = BASE/git/.gitconfig
 
 [user]
 	email = EMAIL

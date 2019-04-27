@@ -1,4 +1,5 @@
-ROOT := $(shell echo $(CURDIR))
+BASE := $(shell dirname $(CURDIR))
+ROOT = $(BASE)/git
 
 CONFIG_FILE = $(ROOT)/configuration
 
@@ -11,9 +12,9 @@ include $(CONFIG_FILE)
 .PHONY: all
 all: $(HOME)/.gitconfig clean
 
-$(HOME)/.gitconfig: $(ROOT)/.gitconfig
+$(HOME)/.gitconfig: $(ROOT)/.gitconfig $(ROOT)/.gitconfig.default
 	cp $(ROOT)/.gitconfig.default $(ROOT)/.gitconfig.default.tmp
-	sed -i "s|USER|$(USER)|" $(ROOT)/.gitconfig.default.tmp
+	sed -i "s|BASE|$(BASE)|" $(ROOT)/.gitconfig.default.tmp
 	sed -i "s|EMAIL|$(EMAIL)|" $(ROOT)/.gitconfig.default.tmp
 	sed -i "s|NAME|$(NAME)|" $(ROOT)/.gitconfig.default.tmp
 	cp $(ROOT)/.gitconfig.default.tmp $(HOME)/.gitconfig

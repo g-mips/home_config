@@ -1,2 +1,2 @@
-#include "/home/USER/.config/xwindowsystem/.Xresources"
-#include "/home/USER/.config/urxvt/.Xresources"
+#include "BASE/xwindowsystem/.Xresources"
+#include "BASE/urxvt/.Xresources"
