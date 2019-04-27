@@ -1,5 +1,5 @@
 .PHONY: all
-all: xwindowsystem bash git
+all: xwindowsystem bash git vim
 
 .PHONY: xwindowsystem
 xwindowsystem:
@@ -21,3 +21,10 @@ git:
 	@echo -e '\033[0;32m************ Installing git configuration ************\033[0m'
 	@echo -e '\033[0;32m******************************************************\033[0m'
 	$(MAKE) -C git all
+
+.PHONY: vim
+vim:
+	@echo -e '\033[0;32m******************************************************\033[0m'
+	@echo -e '\033[0;32m************ Installing vim configuration ************\033[0m'
+	@echo -e '\033[0;32m******************************************************\033[0m'
+	$(MAKE) -C vim all

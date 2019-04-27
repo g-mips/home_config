@@ -31,6 +31,8 @@ au FileType c,cpp setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab smartt
 " Golang
 au FileType go setlocal tabstop=8 shiftwidth=8 softtabstop=8 noexpandtab smarttab
 
+inoremap jj <ESC>
+
 " set guioptions -=m
 " set guioptions -=T
 " set guioptions -=r

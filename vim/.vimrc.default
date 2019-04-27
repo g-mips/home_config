@@ -1,1 +1,1 @@
-source /home/USER/.config/vim/.vimrc
+source BASE/vim/.vimrc
