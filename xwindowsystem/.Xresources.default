@@ -1,3 +1,2 @@
 #include "BASE/xwindowsystem/.Xresources"
-#include "BASE/urxvt/.Xresources"
 #include "BASE/st/.Xresources"
