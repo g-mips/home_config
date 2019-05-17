@@ -60,7 +60,7 @@ prompt () {
 
     PS1="    \[$GREEN\]└─\[$RESET\]\[$EXIT_COLOR\]■\[$RESET\] "
     echo -e -n " ($GREEN$SHLVL$RESET) $GREEN┌─$RESET[$PURPLE$USER@$HOSTNAME$RESET]"
-    echo -e -n "[$GREEN$(basename $PWD)$RESET]"
+    echo -e -n [$GREEN$(basename "$PWD")$RESET]
     echo -e "$(display_opening_parenthesis)$(git_branch)$(git_status)$(display_closing_parenthesis)"
 }
 
