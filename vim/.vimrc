@@ -33,6 +33,8 @@ au FileType go setlocal tabstop=8 shiftwidth=8 softtabstop=8 noexpandtab smartta
 
 inoremap jj <ESC>
 
-" set guioptions -=m
-" set guioptions -=T
-" set guioptions -=r
+if has('gui_running')
+    set guioptions -=m
+    set guioptions -=T
+    set guioptions -=r
+endif
