@@ -1,5 +1,6 @@
-#!/bin/bash
-CONFIG_FILE=/home/$USER/.config/git/configuration
+#!/bin/sh
+ROOT=$(pwd)
+CONFIG_FILE=${ROOT}/configuration
 
 echo "******** GIT CONFIGURATION ********"
 echo "'user' configuration"
