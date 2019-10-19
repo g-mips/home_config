@@ -58,10 +58,28 @@ prompt () {
         EXIT_COLOR=$RED
     fi
 
+    local OPEN_PAREN=
+    local CLOSED_PAREN=
+    local BRANCH=
+    local STATUS=
+    if dir_is_git_repo
+    then
+        OPEN_PAREN=" ("
+        CLOSED_PAREN=")"
+        BRANCH="${GREEN}$(git branch | grep "\*" | rev | cut -d' ' -f1 | rev | cut -d')' -f1)${RESET}"
+        STATUS=$(git status -uno --short 2> /dev/null)
+
+        if [ -n "$STATUS" ]
+        then
+            STATUS=" ${RED}*${RESET}"
+        fi
+    fi
+
+
     PS1="    \[$GREEN\]└─\[$RESET\]\[$EXIT_COLOR\]■\[$RESET\] "
     echo -e -n " ($GREEN$SHLVL$RESET) $GREEN┌─$RESET[$PURPLE$USER@$HOSTNAME$RESET]"
     echo -e -n [$GREEN$(basename "$PWD")$RESET]
-    echo -e "$(display_opening_parenthesis)$(git_branch)$(git_status)$(display_closing_parenthesis)"
+    echo -e "${OPEN_PAREN}${BRANCH}${STATUS}${CLOSED_PAREN}"
 }
 
 PROMPT_COMMAND='prompt'
