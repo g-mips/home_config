@@ -1,3 +1,19 @@
-if [ -f BASE/bash/.bashrc ]; then
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+if [ -f BASE/bash/.bashrc ];
+then
 	. BASE/bash/.bashrc
+fi
+
+if [ -f BASE/bash/.bash_aliases ];
+then
+    . BASE/bash/.bash_aliases
+fi
+
+if [ -f BASE/bash/.bash_prompt ]; then
+	. BASE/bash/.bash_prompt
 fi

@@ -1,4 +1,5 @@
 # If not running interactively, don't do anything
+# Included in this file as well just in case
 case $- in
     *i*) ;;
       *) return;;
@@ -42,14 +43,6 @@ stty -ixon
 
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
-if [ -f ~/.config/bash/.bash_aliases ]; then
-	. ~/.config/bash/.bash_aliases
-fi
-
-if [ -f ~/.config/bash/.bash_prompt ]; then
-	. ~/.config/bash/.bash_prompt
-fi
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
