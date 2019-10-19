@@ -16,7 +16,8 @@ error () {
 
 GIT=false
 GDB=false
-while getopts "hagG" option
+BASH_CONF=false
+while getopts "hagGb" option
 do
     case "${option}" in
         h)
@@ -25,12 +26,16 @@ do
         a)
             GIT=true
             GDB=true
+            BASH_CONF=true
             ;;
         g)
             GIT=true
             ;;
         G)
             GDB=true
+            ;;
+        b)
+            BASH_CONF=true
             ;;
     esac
 done
@@ -43,4 +48,9 @@ fi
 if $GDB
 then
     cd gdb && ./configure.sh
+fi
+
+if $BASH_CONF
+then
+    cd bash && ./configure.sh
 fi
