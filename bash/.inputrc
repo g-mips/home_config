@@ -3,3 +3,24 @@ set editing-mode vi
 set show-mode-in-prompt on
 set vi-ins-mode-string "+"
 set vi-cmd-mode-string ":"
+
+# Color files by types
+set colored-stats On
+# Append char to indicate type
+set visible-stats On
+# Mark symlinked directories
+set mark-symlinked-directories On
+# Color the common prefix
+set colored-completion-prefix On
+# Color the common prefix in menu-complete
+set menu-complete-display-prefix On
+
+set keymap emacs
+"\ee": vi-editing-mode
+
+set keymap vi-command
+"\ee": emacs-editing-mode
+
+set keymap vi-insert
+"\ee": emacs-editing-mode
+"\C-l":clear-screen

@@ -5,8 +5,11 @@ case $- in
       *) return;;
 esac
 
+# Default PATH
+#PATH=${HOME}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
+
 # Setup Editors
-export ALTERNATE_EDITOR='/usr/bin/emacs'
+export ALTERNATE_EDITOR='/usr/bin/ed'
 export EDITOR='/usr/bin/vim'
 export VISUAL='/usr/bin/vim'
 
@@ -34,7 +37,7 @@ HISTFILESIZE=2000
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# Turn off CTRL-S and CTRL-Q. They are annoying and unneeded.
+# Turn off CTRL-S and CTRL-Q. They are annoying and unneeded (in most cases).
 stty -ixon
 
 # If set, the pattern "**" used in a pathname expansion context will
@@ -54,6 +57,8 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+export TERM=xterm-256color
 
 SSH_ENV="$HOME/.ssh/environment"
 function start_agent {
@@ -76,10 +81,3 @@ else
      start_agent;
 fi
 
-# Enable vim editing
-bind -m emacs '"\ee": vi-editing-mode'
-bind -m vi '"\ee": emacs-editing-mode'
-
-cgd() {
-    cd $(git worktree list | grep "\[$1\]" | cut -d' ' -f1)
-}
