@@ -25,8 +25,8 @@ set incsearch
 au FileType html,javascript setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab smarttab
 au BufNewFile,BufRead *.vue setfiletype html
 
-" C, C++
-au FileType c,cpp setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab smarttab
+" C, C++, Shell
+au FileType c,cpp,sh setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab smarttab
 
 " Golang
 au FileType go setlocal tabstop=8 shiftwidth=8 softtabstop=8 noexpandtab smarttab
