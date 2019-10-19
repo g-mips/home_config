@@ -1,3 +1,10 @@
+EXPECTED_DIR = /home/$(USER)/.config
+ACTUAL_DIR = $(CURDIR)
+
+ifneq ($(EXPECTED_DIR), $(ACTUAL_DIR))
+$(error "Please install this in $(EXPECTED_DIR)")
+endif
+
 .PHONY: all
 all: xwindowsystem bash git vim
 
@@ -28,3 +35,10 @@ vim:
 	@echo -e '\033[0;32m************ Installing vim configuration ************\033[0m'
 	@echo -e '\033[0;32m******************************************************\033[0m'
 	$(MAKE) -C vim all
+
+.PHONY: gdb
+gdb:
+	@echo -e '\033[0;32m******************************************************\033[0m'
+	@echo -e '\033[0;32m************ Installing gdb configuration ************\033[0m'
+	@echo -e '\033[0;32m******************************************************\033[0m'
+	$(MAKE) -C gdb all
