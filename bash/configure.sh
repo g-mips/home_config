@@ -1,11 +1,13 @@
 #!/bin/sh
 ROOT=$(pwd)
-CONFIG_FILE=${ROOT}/Makefile_config
-CONFIG_FILE=${ROOT}/.bashrc.default
+BASH_CONFIG_FILE=${ROOT}/.bashrc.default
+INPUT_CONFIG_FILE=${ROOT}/.inputrc.default
 
 echo "******** GDB CONFIGURATION ********"
 
-cat > $CONFIG_FILE <<- EOF
+echo "\$include ${ROOT}/.inputrc" > $INPUT_CONFIG_FILE
+
+cat > $BASH_CONFIG_FILE <<- EOF
 # If not running interactively, don't do anything
 case \$- in
     *i*) ;;
@@ -22,7 +24,7 @@ read -p "Do you want to include the bash aliases file (y|n)? " ALIASES
 
 if [ "$ALIASES" = "y" ] || [ "$ALIASES" = "Y" ]
 then
-    cat >> $CONFIG_FILE <<- EOF
+    cat >> $BASH_CONFIG_FILE <<- EOF
 
 if [ -f $ROOT/.bash_aliases ]
 then
@@ -35,7 +37,7 @@ read -p "Do you want to include the bash prompt file (y|n)? " PROMPT
 
 if [ "$PROMPT" = "y" ] || [ "$PROMPT" = "Y" ]
 then
-    cat >> $CONFIG_FILE <<- EOF
+    cat >> $BASH_CONFIG_FILE <<- EOF
 
 if [ -f $ROOT/.bash_prompt ]
 then
@@ -48,7 +50,7 @@ read -p "Do you want to include the game boy development env file (y|n)? " GB_DE
 
 if [ "$GB_DEV" = "y" ] || [ "$GB_DEV" = "Y" ]
 then
-    cat >> $CONFIG_FILE <<- EOF
+    cat >> $BASH_CONFIG_FILE <<- EOF
 
 if [ -f $ROOT/.bash_gb_dev ]
 then

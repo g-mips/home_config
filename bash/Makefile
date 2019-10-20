@@ -10,7 +10,7 @@ $(HOME)/.bashrc: $(ROOT)/.bashrc.default
 
 $(HOME)/.inputrc: $(ROOT)/.inputrc.default
 	cp $(ROOT)/.inputrc.default $(HOME)/.inputrc
-	@echo "Please run 'bind -f $(HOME)/.inputrc` or close and reopen terminal"
+	@echo "Please run 'bind -f $(HOME)/.inputrc' or close and reopen terminal"
 
 $(HOME)/.bash_profile: $(ROOT)/.bash_profile
 	cp $(ROOT)/.bash_profile $(HOME)/.bash_profile
@@ -20,5 +20,5 @@ $(HOME)/.bash_logout: $(ROOT)/.bash_logout
 
 .PHONY: clean
 clean:
-	-rm $(ROOT)/.bashrc.default.tmp
-	-rm $(ROOT)/.inputrc.default.tmp
+	-rm $(ROOT)/.bashrc.default
+	-rm $(ROOT)/.inputrc.default
