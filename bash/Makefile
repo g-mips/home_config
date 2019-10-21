@@ -2,7 +2,8 @@ BASE := $(shell dirname $(CURDIR))
 ROOT = $(BASE)/bash
 
 .PHONY: all
-all: $(HOME)/.bashrc $(HOME)/.inputrc $(HOME)/.bash_profile $(HOME)/.bash_logout
+all: $(HOME)/.bashrc $(HOME)/.inputrc $(HOME)/.bash_profile $(HOME)/.bash_logout $(HOME)/.profile
+	@rm -f $(HOME)/.bash_login
 
 $(HOME)/.bashrc: $(ROOT)/.bashrc.default
 	cp $(ROOT)/.bashrc.default $(HOME)/.bashrc
@@ -14,6 +15,9 @@ $(HOME)/.inputrc: $(ROOT)/.inputrc.default
 
 $(HOME)/.bash_profile: $(ROOT)/.bash_profile
 	cp $(ROOT)/.bash_profile $(HOME)/.bash_profile
+
+$(HOME)/.profile: $(ROOT)/.profile
+	cp $(ROOT)/.profile $(HOME)/.profile
 
 $(HOME)/.bash_logout: $(ROOT)/.bash_logout
 	cp $(ROOT)/.bash_logout $(HOME)/.bash_logout
