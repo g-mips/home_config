@@ -6,7 +6,7 @@ $(error "Please install this in $(EXPECTED_DIR)")
 endif
 
 .PHONY: all
-all: xwindowsystem bash git vim
+all: xwindowsystem bash git vim gdb
 
 .PHONY: xwindowsystem
 xwindowsystem:
