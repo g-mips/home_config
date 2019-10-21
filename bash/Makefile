@@ -16,8 +16,12 @@ $(HOME)/.inputrc: $(ROOT)/.inputrc.default
 $(HOME)/.bash_profile: $(ROOT)/.bash_profile
 	cp $(ROOT)/.bash_profile $(HOME)/.bash_profile
 
+TMP_FILE := $(shell mktemp)
 $(HOME)/.profile: $(ROOT)/.profile
-	cp $(ROOT)/.profile $(HOME)/.profile
+	cp $(ROOT)/.profile $(TMP_FILE)
+	cat $(ROOT)/.profile.default >> $(TMP_FILE)
+	mv $(TMP_FILE) $(ROOT)/.profile.default
+	cp $(ROOT)/.profile.default $(HOME)/.profile
 
 $(HOME)/.bash_logout: $(ROOT)/.bash_logout
 	cp $(ROOT)/.bash_logout $(HOME)/.bash_logout

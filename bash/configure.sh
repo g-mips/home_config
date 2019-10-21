@@ -2,8 +2,11 @@
 ROOT=$(pwd)
 BASH_CONFIG_FILE=${ROOT}/.bashrc.default
 INPUT_CONFIG_FILE=${ROOT}/.inputrc.default
+BASH_PROFILE_FILE=${ROOT}/.profile.default
 
-echo "******** GDB CONFIGURATION ********"
+touch $BASH_PROFILE_FILE
+
+echo "******** BASH CONFIGURATION ********"
 
 echo "\$include ${ROOT}/.inputrc" > $INPUT_CONFIG_FILE
 
@@ -50,11 +53,5 @@ read -p "Do you want to include the game boy development env file (y|n)? " GB_DE
 
 if [ "$GB_DEV" = "y" ] || [ "$GB_DEV" = "Y" ]
 then
-    cat >> $BASH_CONFIG_FILE <<- EOF
-
-if [ -f $ROOT/.bash_gb_dev ]
-then
-    . $ROOT/.bash_gb_dev
-fi
-EOF
+    cat $ROOT/.bash_gb_dev > $BASH_PROFILE_FILE
 fi
