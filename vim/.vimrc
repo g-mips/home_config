@@ -4,15 +4,24 @@ execute pathogen#infect()
 syntax on
 filetype plugin indent on
 
+" Relative number
+function! SetRelNum()
+  if &ft != "man"
+    set relativenumber
+  endif
+endfunc
+
 set nu rnu
 augroup numbertoogle
-    au!
-    au BufEnter,FocusGained,InsertLeave * set relativenumber
-    au BufLeave,FocusLost,InsertEnter * set norelativenumber
+  au!
+  au BufEnter,FocusGained,InsertLeave * call SetRelNum()
+  au BufLeave,FocusLost,InsertEnter * set norelativenumber
 augroup END
 
+" Theme
 colorscheme base16-gruvbox-dark-medium
 
+" Man
 runtime! ftplugin/man.vim
 
 set cursorline
@@ -21,8 +30,8 @@ set belloff=all
 set ttyfast
 set incsearch
 
-" Web
-au FileType html,javascript setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab smarttab
+" Web, Vim
+au FileType html,javascript,vim setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab smarttab
 au BufNewFile,BufRead *.vue setfiletype html
 
 " C, C++, Shell
@@ -33,8 +42,9 @@ au FileType go setlocal tabstop=8 shiftwidth=8 softtabstop=8 noexpandtab smartta
 
 inoremap jj <ESC>
 
+" Remove GUI things
 if has('gui_running')
-    set guioptions -=m
-    set guioptions -=T
-    set guioptions -=r
+  set guioptions -=m
+  set guioptions -=T
+  set guioptions -=r
 endif
