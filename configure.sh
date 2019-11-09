@@ -1,12 +1,13 @@
 #!/bin/sh
 
 usage () {
-    echo "Usage $0 [ -hagG ]"
-    echo ""
-    echo "    -h -- print this help"
-    echo "    -a -- configure all"
-    echo "    -g -- configure git"
-    echo "    -G -- configure gdb"
+echo "Usage $0 [ -hagG ]
+
+   -h -- print this help
+   -a -- configure all
+   -g -- configure git
+   -G -- configure gdb
+   -b -- configure bash"
 }
 
 error () {
@@ -21,7 +22,7 @@ while getopts "hagGb" option
 do
     case "${option}" in
         h)
-            error
+            usage
             ;;
         a)
             GIT=true
