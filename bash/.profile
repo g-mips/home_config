@@ -8,12 +8,12 @@
 export PATH=${HOME}/bin:${HOME}/.local/bin:${HOME}/.local/games:${PATH}
 
 # Setup Editors
-export ALTERNATE_EDITOR='/usr/bin/ed'
 export EDITOR='/usr/bin/vim'
-export VISUAL='/usr/bin/vim'
+export VISUAL='/usr/bin/gvim'
+export ALTERNATE_EDITOR='/usr/bin/vi'
 
 # Setup browser
-export BROWSER='/usr/bin/qutebrowser'
+export BROWSER='/usr/bin/firefox:/usr/bin/qutebrowser'
 
 # Setup pager
 export PAGER='/usr/bin/less'
@@ -34,3 +34,5 @@ export TERM=xterm-256color
 
 # Where the SSH environment is found
 export SSH_ENV="$HOME/.ssh/environment"
+
+export TERMINAL="/usr/local/bin/st-custom"

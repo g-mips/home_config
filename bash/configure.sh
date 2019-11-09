@@ -23,9 +23,9 @@ then
 fi
 EOF
 
-read -p "Do you want to include the bash aliases file (y|n)? " ALIASES
+read -N 1 -p "Do you want to include the bash aliases file (y|n)? " ALIASES
 
-if [ "$ALIASES" = "y" ] || [ "$ALIASES" = "Y" ]
+if echo $ALIASES | grep -iqF y
 then
     cat >> $BASH_CONFIG_FILE <<- EOF
 
@@ -36,9 +36,9 @@ fi
 EOF
 fi
 
-read -p "Do you want to include the bash prompt file (y|n)? " PROMPT
+read -N 1 -p $'\nDo you want to include the bash prompt file (y|n)? ' PROMPT
 
-if [ "$PROMPT" = "y" ] || [ "$PROMPT" = "Y" ]
+if echo $PROMPT | grep -iqF y
 then
     cat >> $BASH_CONFIG_FILE <<- EOF
 
@@ -49,9 +49,24 @@ fi
 EOF
 fi
 
-read -p "Do you want to include the game boy development env file (y|n)? " GB_DEV
+read -N 1 -p $'\nDo you want to include the game boy development env file (y|n)? ' GB_DEV
 
-if [ "$GB_DEV" = "y" ] || [ "$GB_DEV" = "Y" ]
+if echo $GB_DEV | grep -iqF y
 then
     cat $ROOT/.bash_gb_dev > $BASH_PROFILE_FILE
 fi
+
+read -N 1 -p $'\nDo you want to include the ssh agent file (y|n)? ' SSH_AGENT_FILE
+
+if echo $SSH_AGENT_FILE | grep -iqF y
+then
+    cat >> $BASH_CONFIG_FILE <<- EOF
+
+if [ -f $ROOT/.bash_ssh_agent ]
+then
+    . $ROOT/.bash_ssh_agent
+fi
+EOF
+fi
+
+echo ""
