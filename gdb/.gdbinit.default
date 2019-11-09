@@ -1,0 +1,3 @@
+source /home/gmips/.config/gdb/.gdbinit
+source /home/gmips/.config/gdb/.gdb_tui
+refresh
