@@ -2,7 +2,14 @@ BASE := $(shell dirname $(CURDIR))
 ROOT = $(BASE)/vim
 
 .PHONY: all
-all: load_vim clean
+all: package_loading load_vim clean
+
+.PHONY: package_loading
+package_loading:
+	-mkdir -p $(HOME)/.vim/bundle $(HOME)/.vim/autoload
+	curl -LSso $(HOME)/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+	./clone-bundles.sh
+
 
 load_vim: $(ROOT)/.vimrc $(ROOT)/.vimrc.default
 	cp $(ROOT)/.vimrc.default $(ROOT)/.vimrc.default.tmp
