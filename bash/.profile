@@ -9,7 +9,7 @@ export PATH=${HOME}/bin:${HOME}/.local/bin:${HOME}/.local/games:${PATH}
 
 # Setup Editors
 export EDITOR='/usr/bin/vim'
-export VISUAL='/usr/bin/gvim'
+export VISUAL='/usr/bin/vim'
 export ALTERNATE_EDITOR='/usr/bin/vi'
 
 # Setup browser
