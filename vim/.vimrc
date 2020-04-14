@@ -30,6 +30,8 @@ set belloff=all
 set ttyfast
 set incsearch
 
+set sessionoptions+=tabpages,globals
+
 " Web, Vim
 au FileType html,javascript,vim setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab smarttab
 au BufNewFile,BufRead *.vue setfiletype html
