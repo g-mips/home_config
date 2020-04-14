@@ -18,6 +18,7 @@ $(HOME)/.bash_profile: $(ROOT)/.bash_profile
 
 TMP_FILE := $(shell mktemp)
 $(HOME)/.profile: $(ROOT)/.profile
+	chmod 644 $(TMP_FILE)
 	cp $(ROOT)/.profile $(TMP_FILE)
 	cat $(ROOT)/.profile.default >> $(TMP_FILE)
 	mv $(TMP_FILE) $(ROOT)/.profile.default
@@ -30,3 +31,4 @@ $(HOME)/.bash_logout: $(ROOT)/.bash_logout
 clean:
 	-rm $(ROOT)/.bashrc.default
 	-rm $(ROOT)/.inputrc.default
+	-rm $(ROOT)/.profile.default
