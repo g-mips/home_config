@@ -35,3 +35,8 @@ if ! shopt -oq posix; then
   fi
 fi
 
+PROMPT_CONFIG="$HOME/.config/bash/prompt_config"
+[ ! -f $PROMPT_CONFIG ] && \
+    echo -e "ML_PROMPT=\"no\"\nSHOW_GIT_INFO=\"no\"\nR_ALIGNED=\"no\"" > $PROMPT_CONFIG
+
+. $PROMPT_CONFIG
