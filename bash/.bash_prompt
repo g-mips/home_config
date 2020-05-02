@@ -3,53 +3,182 @@ case "$TERM" in
     xterm|xterm-color|*-256color) color_prompt=yes;;
 esac
 
-TITLEBAR='\[\033]0;\u@\h:\w\007\]'
-RESET="\033[0m"
-PURPLE="\033[0;35m"
-GREEN="\033[0;32m"
-RED="\033[0;31m"
+# Variables to set to activate different prompts:
+# SHOW_GIT_INFO="yes" -- show git information on prompt
+# ML_PROMPT="yes"     -- multiline prompt
+# R_ALIGNED="yes"     -- have right aligned information as well
+
+toggle_git_info () {
+    OLD_SHOW_GIT_INFO=$SHOW_GIT_INFO
+    [ "$SHOW_GIT_INFO" = "yes" ] && SHOW_GIT_INFO="no" || \
+        SHOW_GIT_INFO="yes"
+    sed -i "s/SHOW_GIT_INFO=\"$OLD_SHOW_GIT_INFO\"/SHOW_GIT_INFO=\"$SHOW_GIT_INFO\"/" \
+        $HOME/.config/bash/prompt_config
+}
+alias cp-tgi=toggle_git_info
+
+toggle_multiline_prompt () {
+    OLD_ML_PROMPT=$ML_PROMPT
+    [ "$ML_PROMPT" = "yes" ] && ML_PROMPT="no" || \
+        ML_PROMPT="yes"
+    sed -i "s/ML_PROMPT=\"$OLD_ML_PROMPT\"/ML_PROMPT=\"$ML_PROMPT\"/" \
+        $HOME/.config/bash/prompt_config
+}
+alias cp-tmp=toggle_multiline_prompt
+
+toggle_right_aligned () {
+    OLD_R_ALIGNED=$R_ALIGNED
+    [ "$R_ALIGNED" = "yes" ] && R_ALIGNED="no" || \
+        R_ALIGNED="yes"
+    sed -i "s/R_ALIGNED=\"$OLD_R_ALIGNED\"/R_ALIGNED=\"$R_ALIGNED\"/" \
+        $HOME/.config/bash/prompt_config
+}
+alias cp-tra=toggle_right_aligned
+
+customize_prompt () {
+    echo -e "Which part do you want to customize:" \
+        "\n\t1) git info\n\t2) multiline\n\t3) right aligned"
+    read option
+
+    case "$option" in
+        1)
+            toggle_git_info
+            ;;
+        2)
+            toggle_multiline_prompt
+            ;;
+        3)
+            toggle_right_aligned
+            ;;
+        *)
+            echo "Not a valid option"
+            return 1
+            ;;
+    esac
+}
+alias cp-i=customize_prompt
+
+# Color codes are \033[<code>m
+# The brackets (\[ and \]) are for using color codes in a prompt.
+# They tell bash that they are non-printing characters. They make
+# the prompt not do weird things.
+FULL_RESET="\[\033[0m\]"
+FG_RESET="\[\033[39m\]"
+
+PURPLE="\[\033[35m\]"
+GREEN="\[\033[32m\]"
+RED="\[\033[31m\]"
+YELLOW="\[\033[33m\]"
+CYAN="\[\033[36m\]"
+
+GREEN_BG="\[\033[0;42;30m\]"
+FULL_BG="\[\033[48;5;11m\]"
+
+SINGLE_LINE_PROMPT="[$GREEN$SHLVL$FULL_RESET]─[$GREEN\t$FULL_RESET]─[$PURPLE\u$FULL_RESET@$YELLOW\h$FULL_RESET]─[$CYAN\W$FULL_RESET]"
 
 dir_is_git_repo () {
     git rev-parse --is-inside-work-tree &> /dev/null
 }
 
-display_opening_parenthesis () {
-    if dir_is_git_repo
+join_by () { local IFS="$1"; shift; echo "$*"; }
+
+get_length_of_non_color_parts () {
+    declare -a ARRAY_VAR=("${!1}")
+    local ARRAY_VAR_STRING_LEN=0
+    for index in ${!ARRAY_VAR[*]}
+    do
+        [ "$(($index % 2))" = "0" ] && \
+            ARRAY_VAR_STRING_LEN=$(($ARRAY_VAR_STRING_LEN + \
+                ${#ARRAY_VAR[$index]}))
+    done
+    echo -n $ARRAY_VAR_STRING_LEN
+}
+
+calculate_compensation () {
+    # assumes PS1R and PS1R_COMPENSATION both exist
+    for (( i = 0; i < ${#PS1R}; i++ ))
+    do
+        [ "${PS1R:$i:1}" = "\\" ] && START_COUNT=1
+
+        # Add in the time (8 characters for the time, - 6 because
+        # 2 characters represent the time (\t)
+        [ $START_COUNT -eq 1 ] && [ "${PS1R:$(($i+1)):1}" = "t" ] && \
+            PS1R_COMPENSATION=$(( $PS1R_COMPENSATION - 6 )) && \
+            i=$(( $i + 1 )) && START_COUNT=0
+
+        # Add color codes
+        [ $START_COUNT -eq 1 ] && \
+            PS1R_COMPENSATION=$(( $PS1R_COMPENSATION + 1 )) && \
+            [ "${PS1R:$i:1}" = "]" ] && START_COUNT=0
+    done
+}
+
+setup_git_info () {
+    if [ "$SHOW_GIT_INFO" = "yes" ]
     then
-        echo -n " ("
+        local IS_GIT_REPO=$(dir_is_git_repo; echo $?)
+        [ $IS_GIT_REPO -eq 0 ] && [ -n "$(git status -uno --short 2> /dev/null)" ] && \
+            GIT_STATUS=" *"
+        [ $IS_GIT_REPO -eq 0 ] && GIT_INFO=(" (" "$GREEN" \
+            "$(git branch | grep "\*" | rev | cut -d' ' -f1 | rev | \
+                cut -d')' -f1)" "$FG_RESET" ")" "$RED" "$GIT_STATUS" "$FG_RESET")
     fi
 }
 
-display_closing_parenthesis () {
-    if dir_is_git_repo
+multiline_prompt () {
+    # The different parts of PS1
+    local SHLVL_INFO=(" (" "$GREEN" "$SHLVL" "$FG_RESET" ")")
+    local PRMPT_HOOK=(" " "$GREEN" "┌─" "$FG_RESET")
+    local PC_INFO=("[" "$PURPLE" "$USER" "$FG_RESET" "@" "$YELLOW" "$HOSTNAME" "$FG_RESET" "]")
+    local DIR_INFO=("[" "$CYAN" "$(basename "$PWD")" "$FG_RESET" "]")
+    local GIT_INFO=
+    local GIT_STATUS=
+    local DATE_INFO=
+
+    # Create the git info part
+    setup_git_info
+
+    # Set up the different parts of the prompt (left side, right side, prompt)
+    local PS1R="$FG_RESET[$GREEN\t$FULL_RESET]"
+    [ "$R_ALIGNED" != "yes" ] && DATE_INFO="$GREEN─$PS1R"
+    local PS1L="$(join_by "" "${SHLVL_INFO[@]}")$(join_by "" "${PRMPT_HOOK[@]}")$(join_by "" "${PC_INFO[@]}")$(join_by "" "${DIR_INFO[@]}")$DATE_INFO$(join_by "" "${GIT_INFO[@]}")"
+    local PS1_PRMPT="    $GREEN└─$FG_RESET$EXIT_COLOR■$FULL_RESET "
+
+    # Get the length of the left side of PS1
+    local PS1L_LEN=0
+    if [ "$R_ALIGNED" = "yes" ]
     then
-        echo -n ")"
+        PS1L_LEN=$(($PS1L_LEN + $(get_length_of_non_color_parts SHLVL_INFO[@])))
+        PS1L_LEN=$(($PS1L_LEN + $(get_length_of_non_color_parts PRMPT_HOOK[@])))
+        PS1L_LEN=$(($PS1L_LEN + $(get_length_of_non_color_parts PC_INFO[@])))
+        PS1L_LEN=$(($PS1L_LEN + $(get_length_of_non_color_parts DIR_INFO[@])))
+        PS1L_LEN=$(($PS1L_LEN + $(get_length_of_non_color_parts GIT_INFO[@])))
+    else
+        PS1R=
+        PS1L_LEN=$COLUMNS
     fi
+
+    # Add in the amount to account for escaped sequences
+    local START_COUNT=0
+    local PS1R_COMPENSATION=0
+    [ "$R_ALIGNED" = "yes" ] && calculate_compensation
+
+    # Put it all together now
+    PS1="`printf "%s%$((${COLUMNS}-${PS1L_LEN}+${PS1R_COMPENSATION}))s\n%s" "$PS1L" "$PS1R" "$PS1_PRMPT"`"
 }
 
-git_status () {
-    if dir_is_git_repo
-    then
-        local STATUS=$(git status -uno --short 2> /dev/null)
+singleline_prompt () {
+    local GIT_INFO=
+    local GIT_STATUS=
 
-        if [ -n "$STATUS" ]
-        then
-            echo -n " $RED*$RESET"
-        fi
-    fi
-}
+    setup_git_info
 
-git_branch () {
-    if dir_is_git_repo
-    then
-        local BRANCH=$(git branch | grep "\*" | rev | cut -d' ' -f1 | rev | cut -d')' -f1)
-
-        echo -n "$GREEN$BRANCH$RESET"
-    fi
+    PS1="$SINGLE_LINE_PROMPT$GREEN─$EXIT_COLOR■$FULL_RESET$(join_by "" "${GIT_INFO[@]}") "
 }
 
 # TODO(Grant): git rev-parse --verify --quiet refs/stash >/dev/null
 prompt () {
+    # This has to be first. I need to get the exit code of the last command ran
     local EXIT="$?"
     local EXIT_COLOR=$GREEN
 
@@ -58,28 +187,7 @@ prompt () {
         EXIT_COLOR=$RED
     fi
 
-    local OPEN_PAREN=
-    local CLOSED_PAREN=
-    local BRANCH=
-    local STATUS=
-    if dir_is_git_repo
-    then
-        OPEN_PAREN=" ("
-        CLOSED_PAREN=")"
-        BRANCH="${GREEN}$(git branch | grep "\*" | rev | cut -d' ' -f1 | rev | cut -d')' -f1)${RESET}"
-        STATUS=$(git status -uno --short 2> /dev/null)
-
-        if [ -n "$STATUS" ]
-        then
-            STATUS=" ${RED}*${RESET}"
-        fi
-    fi
-
-
-    PS1="    \[$GREEN\]└─\[$RESET\]\[$EXIT_COLOR\]■\[$RESET\] "
-    echo -e -n " ($GREEN$SHLVL$RESET) $GREEN┌─$RESET[$PURPLE$USER@$HOSTNAME$RESET]"
-    echo -e -n [$GREEN$(basename "$PWD")$RESET]
-    echo -e "${OPEN_PAREN}${BRANCH}${STATUS}${CLOSED_PAREN}"
+    [ "$ML_PROMPT" = "yes" ] && multiline_prompt || singleline_prompt
 }
 
 PROMPT_COMMAND='prompt'
