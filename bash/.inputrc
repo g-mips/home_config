@@ -23,4 +23,4 @@ set keymap vi-command
 
 set keymap vi-insert
 "\ee": emacs-editing-mode
-"\C-l":clear-screen
+"\C-l": clear-screen
