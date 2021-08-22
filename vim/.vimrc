@@ -19,7 +19,7 @@ augroup numbertoogle
 augroup END
 
 " Theme
-colorscheme base16-gruvbox-dark-medium
+"colorscheme base16-gruvbox-dark-medium
 
 " Man
 runtime! ftplugin/man.vim
