@@ -19,7 +19,10 @@ augroup numbertoogle
 augroup END
 
 " Theme
-"colorscheme base16-gruvbox-dark-medium
+set background=dark
+let g:everforeset_background = 'soft'
+colorscheme everforest
+let g:airline_theme = 'everforest'
 
 " Man
 runtime! ftplugin/man.vim
