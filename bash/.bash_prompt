@@ -3,17 +3,33 @@ case "$TERM" in
     xterm|xterm-color|*-256color) color_prompt=yes;;
 esac
 
+# Setup cache file
+CACHE_FILE=$XDG_CACHE_HOME/bash/prompt_config
+[ ! -d $XDG_CACHE_HOME/bash ] && mkdir -p $(dirname $CACHE_FILE) &> /dev/null
+[ ! -f $CACHE_FILE ] && cat >> $CACHE_FILE << EOF
+SHOW_GIT_INFO="no"
+ML_PROMPT="no"
+R_ALIGNED="no"
+EXIT_CODE_SETTING="no"
+SIMPLE_PROMPT="no"
+EOF
+. $CACHE_FILE
+
 # Variables to set to activate different prompts:
-# SHOW_GIT_INFO="yes" -- show git information on prompt
-# ML_PROMPT="yes"     -- multiline prompt
-# R_ALIGNED="yes"     -- have right aligned information as well
+# SHOW_GIT_INFO="yes"      -- show git information on prompt
+# ML_PROMPT="yes"          -- multiline prompt
+# R_ALIGNED="yes"          -- have right aligned information as well
+# EXIT_CODE_SETTING="yes"  -- have the last exit code in the prompt
+# SIMPLE_PROMPT="path|yes" -- display prompt in a simple matter
 
 toggle_git_info () {
     OLD_SHOW_GIT_INFO=$SHOW_GIT_INFO
     [ "$SHOW_GIT_INFO" = "yes" ] && SHOW_GIT_INFO="no" || \
         SHOW_GIT_INFO="yes"
-    sed -i "s/SHOW_GIT_INFO=\"$OLD_SHOW_GIT_INFO\"/SHOW_GIT_INFO=\"$SHOW_GIT_INFO\"/" \
-        $HOME/.config/bash/prompt_config
+    (grep SHOW_GIT_INFO $CACHE_FILE &> /dev/null &&
+        sed -i "s/SHOW_GIT_INFO=\"$OLD_SHOW_GIT_INFO\"/SHOW_GIT_INFO=\"$SHOW_GIT_INFO\"/" \
+        $CACHE_FILE) || \
+        echo "SHOW_GIT_INFO=\"$SHOW_GIT_INFO\"" >> $CACHE_FILE
 }
 alias cp-tgi=toggle_git_info
 
@@ -21,8 +37,10 @@ toggle_multiline_prompt () {
     OLD_ML_PROMPT=$ML_PROMPT
     [ "$ML_PROMPT" = "yes" ] && ML_PROMPT="no" || \
         ML_PROMPT="yes"
-    sed -i "s/ML_PROMPT=\"$OLD_ML_PROMPT\"/ML_PROMPT=\"$ML_PROMPT\"/" \
-        $HOME/.config/bash/prompt_config
+    (grep ML_PROMPT $CACHE_FILE &> /dev/null &&
+        sed -i "s/ML_PROMPT=\"$OLD_ML_PROMPT\"/ML_PROMPT=\"$ML_PROMPT\"/" \
+        $CACHE_FILE) || \
+        echo "ML_PROMPT=\"$ML_PROMPT\"" >> $CACHE_FILE
 }
 alias cp-tmp=toggle_multiline_prompt
 
@@ -30,14 +48,46 @@ toggle_right_aligned () {
     OLD_R_ALIGNED=$R_ALIGNED
     [ "$R_ALIGNED" = "yes" ] && R_ALIGNED="no" || \
         R_ALIGNED="yes"
-    sed -i "s/R_ALIGNED=\"$OLD_R_ALIGNED\"/R_ALIGNED=\"$R_ALIGNED\"/" \
-        $HOME/.config/bash/prompt_config
+    (grep R_ALIGNED $CACHE_FILE &> /dev/null &&
+        sed -i "s/R_ALIGNED=\"$OLD_R_ALIGNED\"/R_ALIGNED=\"$R_ALIGNED\"/" \
+        $CACHE_FILE) || \
+        echo "R_ALIGNED=\"$R_ALIGNED\"" >> $CACHE_FILE
 }
 alias cp-tra=toggle_right_aligned
 
+toggle_exit_code () {
+    OLD_EXIT_CODE_SETTING=$EXIT_CODE_SETTING
+    [ "$EXIT_CODE_SETTING" = "yes" ] && EXIT_CODE_SETTING="no" || \
+        EXIT_CODE_SETTING="yes"
+    (grep EXIT_CODE_SETTING $CACHE_FILE &> /dev/null && \
+        sed -i "s/EXIT_CODE_SETTING=\"$OLD_EXIT_CODE_SETTING\"/EXIT_CODE_SETTING=\"$EXIT_CODE_SETTING\"/" \
+        $CACHE_FILE) || \
+        echo "EXIT_CODE_SETTING=\"$EXIT_CODE_SETTING\"" >> $CACHE_FILE
+}
+alias cp-tec=toggle_exit_code
+
+toggle_simple_prompt () {
+    OLD_SIMPLE_PROMPT=$SIMPLE_PROMPT
+    if [ "$SIMPLE_PROMPT" = "yes" ]
+    then
+        SIMPLE_PROMPT="path"
+    elif [ "$SIMPLE_PROMPT" = "path" ]
+    then
+        SIMPLE_PROMPT="no"
+    else
+        SIMPLE_PROMPT="yes"
+    fi
+    (grep SIMPLE_PROMPT $CACHE_FILE &> /dev/null && \
+        sed -i "s/SIMPLE_PROMPT=\"$OLD_SIMPLE_PROMPT\"/SIMPLE_PROMPT=\"$SIMPLE_PROMPT\"/" \
+        $CACHE_FILE) || \
+        echo "SIMPLE_PROMPT=\"$SIMPLE_PROMPT\"" >> $CACHE_FILE
+}
+alias cp-tsp=toggle_simple_prompt
+
 customize_prompt () {
     echo -e "Which part do you want to customize:" \
-        "\n\t1) git info\n\t2) multiline\n\t3) right aligned"
+        "\n\t1) git info\n\t2) multiline\n\t3) right aligned\n\t4) exit code string" \
+        "\n\t5) simple prompt"
     read option
 
     case "$option" in
@@ -49,6 +99,12 @@ customize_prompt () {
             ;;
         3)
             toggle_right_aligned
+            ;;
+        4)
+            toggle_exit_code
+            ;;
+        5)
+            toggle_simple_prompt
             ;;
         *)
             echo "Not a valid option"
@@ -117,10 +173,10 @@ setup_git_info () {
     if [ "$SHOW_GIT_INFO" = "yes" ]
     then
         local IS_GIT_REPO=$(dir_is_git_repo; echo $?)
-        [ $IS_GIT_REPO -eq 0 ] && [ -n "$(git status -uno --short 2> /dev/null)" ] && \
+        [ $IS_GIT_REPO -eq 0 ] && [ -n "$(timeout 2 git status -uno --short 2> /dev/null)" ] && \
             GIT_STATUS=" *"
         [ $IS_GIT_REPO -eq 0 ] && GIT_INFO=(" (" "$GREEN" \
-            "$(git branch | grep "\*" | rev | cut -d' ' -f1 | rev | \
+            "$(timeout 2 git branch | grep "\*" | rev | cut -d' ' -f1 | rev | \
                 cut -d')' -f1)" "$FG_RESET" ")" "$RED" "$GIT_STATUS" "$FG_RESET")
     fi
 }
@@ -137,11 +193,13 @@ multiline_prompt () {
 
     # Create the git info part
     setup_git_info
+    [ "$EXIT_CODE_SETTING" = "yes" ] && \
+        PROMPT_EXIT_CODE_STR=-[$PROMPT_EXIT_CODE] || PROMPT_EXIT_CODE_STR=
 
     # Set up the different parts of the prompt (left side, right side, prompt)
     local PS1R="$FG_RESET[$GREEN\t$FULL_RESET]"
     [ "$R_ALIGNED" != "yes" ] && DATE_INFO="$GREEN─$PS1R"
-    local PS1L="$(join_by "" "${SHLVL_INFO[@]}")$(join_by "" "${PRMPT_HOOK[@]}")$(join_by "" "${PC_INFO[@]}")$(join_by "" "${DIR_INFO[@]}")$DATE_INFO$(join_by "" "${GIT_INFO[@]}")"
+    local PS1L="$(join_by "" "${SHLVL_INFO[@]}")$(join_by "" "${PRMPT_HOOK[@]}")$(join_by "" "${PC_INFO[@]}")$(join_by "" "${DIR_INFO[@]}")$DATE_INFO$PROMPT_EXIT_CODE_STR$(join_by "" "${GIT_INFO[@]}")"
     local PS1_PRMPT="    $GREEN└─$FG_RESET$EXIT_COLOR■$FULL_RESET "
 
     # Get the length of the left side of PS1
@@ -153,6 +211,7 @@ multiline_prompt () {
         PS1L_LEN=$(($PS1L_LEN + $(get_length_of_non_color_parts PC_INFO[@])))
         PS1L_LEN=$(($PS1L_LEN + $(get_length_of_non_color_parts DIR_INFO[@])))
         PS1L_LEN=$(($PS1L_LEN + $(get_length_of_non_color_parts GIT_INFO[@])))
+        PS1L_LEN=$(($PS1L_LEN + $(get_length_of_non_color_parts PROMPT_EXIT_CODE_STR)))
     else
         PS1R=
         PS1L_LEN=$COLUMNS
@@ -173,21 +232,34 @@ singleline_prompt () {
 
     setup_git_info
 
-    PS1="$SINGLE_LINE_PROMPT$GREEN─$EXIT_COLOR■$FULL_RESET$(join_by "" "${GIT_INFO[@]}") "
+    [ "$EXIT_CODE_SETTING" = "yes" ] && \
+        PROMPT_EXIT_CODE_STR=-[$PROMPT_EXIT_CODE] || PROMPT_EXIT_CODE_STR=
+    PS1=" $SINGLE_LINE_PROMPT$PROMPT_EXIT_CODE_STR$GREEN-$EXIT_COLOR■$FULL_RESET$(join_by "" "${GIT_INFO[@]}") "
+}
+
+simple_prompt () {
+    [ "$SIMPLE_PROMPT" = "yes" ] && PS1=" $EXIT_COLOR#$FULL_RESET "
+    [ "$SIMPLE_PROMPT" = "path" ] && PS1=" $CYAN\W$FULL_RESET $EXIT_COLOR#$FULL_RESET "
 }
 
 # TODO(Grant): git rev-parse --verify --quiet refs/stash >/dev/null
 prompt () {
     # This has to be first. I need to get the exit code of the last command ran
-    local EXIT="$?"
+    # local EXIT="$?"
+    PROMPT_EXIT_CODE="$?"
     local EXIT_COLOR=$GREEN
 
-    if [ $EXIT != 0 ]
+    if [ $PROMPT_EXIT_CODE != 0 ]
     then
         EXIT_COLOR=$RED
     fi
 
-    [ "$ML_PROMPT" = "yes" ] && multiline_prompt || singleline_prompt
+    if [ "$SIMPLE_PROMPT" != "no" ]
+    then
+        simple_prompt
+    else
+        [ "$ML_PROMPT" = "yes" ] && multiline_prompt || singleline_prompt
+    fi
 }
 
 PROMPT_COMMAND='prompt'
