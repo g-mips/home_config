@@ -12,6 +12,7 @@ ML_PROMPT="no"
 R_ALIGNED="no"
 EXIT_CODE_SETTING="no"
 SIMPLE_PROMPT="no"
+SHOW_FULL_PATH="no"
 EOF
 . $CACHE_FILE
 
@@ -21,6 +22,7 @@ EOF
 # R_ALIGNED="yes"          -- have right aligned information as well
 # EXIT_CODE_SETTING="yes"  -- have the last exit code in the prompt
 # SIMPLE_PROMPT="path|yes" -- display prompt in a simple matter
+# SHOW_FULL_PATH="yes"     -- display full path in prompt
 
 toggle_git_info () {
     OLD_SHOW_GIT_INFO=$SHOW_GIT_INFO
@@ -84,6 +86,17 @@ toggle_simple_prompt () {
 }
 alias cp-tsp=toggle_simple_prompt
 
+toggle_full_path () {
+    OLD_SHOW_FULL_PATH=$SHOW_FULL_PATH
+    [ "$SHOW_FULL_PATH" = "yes" ] && SHOW_FULL_PATH="no" || \
+        SHOW_FULL_PATH="yes"
+    (grep SHOW_FULL_PATH $CACHE_FILE &> /dev/null && \
+        sed -i "s/SHOW_FULL_PATH=\"$OLD_SHOW_FULL_PATH\"/SHOW_FULL_PATH=\"$SHOW_FULL_PATH\"/" \
+        $CACHE_FILE) || \
+        echo "SHOW_FULL_PATH=\"$SHOW_FULL_PATH\"" >> $CACHE_FILE
+}
+alias cp-tfp=toggle_full_path
+
 customize_prompt () {
     echo -e "Which part do you want to customize:" \
         "\n\t1) git info\n\t2) multiline\n\t3) right aligned\n\t4) exit code string" \
@@ -130,7 +143,7 @@ CYAN="\[\033[36m\]"
 GREEN_BG="\[\033[0;42;30m\]"
 FULL_BG="\[\033[48;5;11m\]"
 
-SINGLE_LINE_PROMPT="[$GREEN$SHLVL$FULL_RESET]─[$GREEN\t$FULL_RESET]─[$PURPLE\u$FULL_RESET@$YELLOW\h$FULL_RESET]─[$CYAN\W$FULL_RESET]"
+SINGLE_LINE_PROMPT="[$GREEN$SHLVL$FULL_RESET]─[$GREEN\t$FULL_RESET]─[$PURPLE\u$FULL_RESET@$YELLOW\h$FULL_RESET]"
 
 dir_is_git_repo () {
     git rev-parse --is-inside-work-tree &> /dev/null
@@ -186,7 +199,7 @@ multiline_prompt () {
     local SHLVL_INFO=(" (" "$GREEN" "$SHLVL" "$FG_RESET" ")")
     local PRMPT_HOOK=(" " "$GREEN" "┌─" "$FG_RESET")
     local PC_INFO=("[" "$PURPLE" "$USER" "$FG_RESET" "@" "$YELLOW" "$HOSTNAME" "$FG_RESET" "]")
-    local DIR_INFO=("[" "$CYAN" "$(basename "$PWD")" "$FG_RESET" "]")
+    local DIR_INFO=("[" "$CYAN" "$([ "$SHOW_FULL_PATH" = "yes" ] && echo $(echo $PWD | sed -e "s|$HOME|~|") || echo $(basename $PWD))" "$FG_RESET" "]")
     local GIT_INFO=
     local GIT_STATUS=
     local DATE_INFO=
@@ -234,12 +247,12 @@ singleline_prompt () {
 
     [ "$EXIT_CODE_SETTING" = "yes" ] && \
         PROMPT_EXIT_CODE_STR=-[$PROMPT_EXIT_CODE] || PROMPT_EXIT_CODE_STR=
-    PS1=" $SINGLE_LINE_PROMPT$PROMPT_EXIT_CODE_STR$GREEN-$EXIT_COLOR■$FULL_RESET$(join_by "" "${GIT_INFO[@]}") "
+    PS1=" $SINGLE_LINE_PROMPT─[$CYAN$([ "$SHOW_FULL_PATH" = "yes" ] && echo -n '\w' || echo -n '\W')$FULL_RESET]$PROMPT_EXIT_CODE_STR$GREEN-$EXIT_COLOR■$FULL_RESET$(join_by "" "${GIT_INFO[@]}") "
 }
 
 simple_prompt () {
-    [ "$SIMPLE_PROMPT" = "yes" ] && PS1=" $EXIT_COLOR#$FULL_RESET "
-    [ "$SIMPLE_PROMPT" = "path" ] && PS1=" $CYAN\W$FULL_RESET $EXIT_COLOR#$FULL_RESET "
+    [ "$SIMPLE_PROMPT" = "yes" ] && PS1=" $EXIT_COLOR\$$FULL_RESET "
+    [ "$SIMPLE_PROMPT" = "path" ] && PS1=" $CYAN$([ "$SHOW_FULL_PATH" = "yes" ] && echo -n '\w' || echo -n '\W')$FULL_RESET $EXIT_COLOR\$$FULL_RESET "
 }
 
 # TODO(Grant): git rev-parse --verify --quiet refs/stash >/dev/null
