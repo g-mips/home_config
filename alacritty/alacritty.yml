@@ -5,6 +5,13 @@ window:
 
   gtk_theme_variant: None
 
+cursor:
+  style:
+    shape: Underline
+    blinking: On
+  vi_mode_style:
+    shape: Underline
+
 font:
   normal:
     family: monospace
