@@ -1,6 +1,6 @@
 # This is used for readline
 set editing-mode vi
-set show-mode-in-prompt on
+set show-mode-in-prompt On
 set vi-ins-mode-string "+"
 set vi-cmd-mode-string ":"
 
