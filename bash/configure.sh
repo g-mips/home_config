@@ -1,10 +1,11 @@
 #!/bin/sh
 ROOT=$(pwd)
-BASH_CONFIG_FILE=${ROOT}/.bashrc.default
-INPUT_CONFIG_FILE=${ROOT}/.inputrc.default
-BASH_PROFILE_FILE=${ROOT}/.profile.default
+[ -z "$XDG_CACHE_DIR" ] && CACHE_DIR=$HOME/.cache && CACHE_DIR=$XDG_CACHE_HOME
+BASH_CONFIG_FILE=$CACHE_DIR/bash/bashrc.default
+INPUT_CONFIG_FILE=$CACHE_DIR/bash/inputrc.default
+BASH_PROFILE_FILE=$CACHE_DIR/bash/profile.default
 
-touch $BASH_PROFILE_FILE
+mkdir -p $CACHE_DIR/bash &> /dev/null
 
 echo "******** BASH CONFIGURATION ********"
 
@@ -20,6 +21,13 @@ esac
 if [ -f $ROOT/.bashrc ]
 then
     . $ROOT/.bashrc
+fi
+EOF
+
+cat > $BASH_PROFILE_FILE <<- EOF
+if [ -f $ROOT/.profile ]
+then
+    . $ROOT/.profile
 fi
 EOF
 
@@ -53,7 +61,13 @@ read -N 1 -p $'\nDo you want to include the game boy development env file (y|n)?
 
 if echo $GB_DEV | grep -iqF y
 then
-    cat $ROOT/.bash_gb_dev > $BASH_PROFILE_FILE
+    cat >> $BASH_PROFILE_FILE <<- EOF
+
+if [ -f $ROOT/.bash_gb_dev ]
+then
+    . $ROOT/.bash_gb_dev
+fi
+EOF
 fi
 
 read -N 1 -p $'\nDo you want to include the ssh agent file (y|n)? ' SSH_AGENT_FILE
