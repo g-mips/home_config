@@ -109,7 +109,7 @@ alias cp-tfp=toggle_full_path
 customize_prompt () {
     echo -e "Which part do you want to customize:" \
         "\n\t1) git info\n\t2) multiline\n\t3) right aligned\n\t4) exit code string" \
-        "\n\t5) simple prompt"
+        "\n\t5) simple prompt\n\t6) toggle_full_path"
     read option
 
     case "$option" in
@@ -127,6 +127,9 @@ customize_prompt () {
             ;;
         5)
             toggle_simple_prompt
+            ;;
+        6)
+            toggle_full_path
             ;;
         *)
             echo "Not a valid option"
