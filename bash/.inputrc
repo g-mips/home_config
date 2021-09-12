@@ -14,6 +14,12 @@ set mark-symlinked-directories On
 set colored-completion-prefix On
 # Color the common prefix in menu-complete
 set menu-complete-display-prefix On
+# Jump to the opening parenthesis when typing the closing
+set blink-matching-paren On
+# Allow up to 200 tab items to appear without prompting the user
+set completion-query-items 200
+# Put brackets around copied commands
+set enable-bracketed-paste On
 
 set keymap emacs
 "\ee": vi-editing-mode
