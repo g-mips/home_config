@@ -54,6 +54,15 @@ toggle_right_aligned () {
         sed -i "s/R_ALIGNED=\"$OLD_R_ALIGNED\"/R_ALIGNED=\"$R_ALIGNED\"/" \
         $CACHE_FILE) || \
         echo "R_ALIGNED=\"$R_ALIGNED\"" >> $CACHE_FILE
+
+    [ "$R_ALIGNED" = "yes" ] && [ "$SIMPLE_PROMPT" != "no" -o "$ML_PROMPT" != "yes" ] && \
+        echo -n "WARNING: Using right aligned with a single line prompt gives some odd behavior. " && \
+        echo -n "If you start to write into the the right side, it will be overwritten. If you " && \
+        echo -n "backspace, the right side will disappear. The mode can't be properly shown in " && \
+        echo "the prompt."
+
+    # Make sure the function exists with a zero
+    true
 }
 alias cp-tra=toggle_right_aligned
 
@@ -235,6 +244,8 @@ multiline_prompt () {
     local PS1R_COMPENSATION=0
     [ "$R_ALIGNED" = "yes" ] && calculate_compensation
 
+    bind "set show-mode-in-prompt On"
+
     # Put it all together now
     PS1="`printf "%s%$((${COLUMNS}-${PS1L_LEN}+${PS1R_COMPENSATION}))s\n%s" "$PS1L" "$PS1R" "$PS1_PRMPT"`"
 }
@@ -248,17 +259,46 @@ singleline_prompt () {
     [ "$EXIT_CODE_SETTING" = "yes" ] && \
         PROMPT_EXIT_CODE_STR=-[$PROMPT_EXIT_CODE] || PROMPT_EXIT_CODE_STR=
     PS1=" $SINGLE_LINE_PROMPT─[$CYAN$([ "$SHOW_FULL_PATH" = "yes" ] && echo -n '\w' || echo -n '\W')$FULL_RESET]$PROMPT_EXIT_CODE_STR$GREEN-$EXIT_COLOR■$FULL_RESET$(join_by "" "${GIT_INFO[@]}") "
+
+    if [ "$R_ALIGNED" = "yes" ]
+    then
+        local PS1R="[$PURPLE\t$FULL_RESET]"
+        local PS1R_COMPENSATION=0
+        local START_COUNT=0
+
+        calculate_compensation
+
+        bind "set show-mode-in-prompt Off"
+
+        PS1="`printf "%$((${COLUMNS}+${PS1R_COMPENSATION}-1))s\r%s" "$PS1R" "$PS1"`"
+    else
+        bind "set show-mode-in-prompt On"
+    fi
 }
 
 simple_prompt () {
     [ "$SIMPLE_PROMPT" = "yes" ] && PS1=" $EXIT_COLOR\$$FULL_RESET "
     [ "$SIMPLE_PROMPT" = "path" ] && PS1=" $CYAN$([ "$SHOW_FULL_PATH" = "yes" ] && echo -n '\w' || echo -n '\W')$FULL_RESET $EXIT_COLOR\$$FULL_RESET "
+
+    if [ "$R_ALIGNED" = "yes" ]
+    then
+        local PS1R="[$PURPLE\t$FULL_RESET]"
+        local PS1R_COMPENSATION=0
+        local START_COUNT=0
+
+        calculate_compensation
+
+        bind "set show-mode-in-prompt Off"
+
+        PS1="`printf "%$((${COLUMNS}+${PS1R_COMPENSATION}-1))s\r%s" "$PS1R" "$PS1"`"
+    else
+        bind "set show-mode-in-prompt On"
+    fi
 }
 
 # TODO(Grant): git rev-parse --verify --quiet refs/stash >/dev/null
 prompt () {
     # This has to be first. I need to get the exit code of the last command ran
-    # local EXIT="$?"
     PROMPT_EXIT_CODE="$?"
     local EXIT_COLOR=$GREEN
 
