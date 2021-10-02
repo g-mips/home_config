@@ -25,7 +25,7 @@ $(HOME)/.inputrc: $(CACHE)/inputrc.default
 $(HOME)/.profile: $(CACHE)/profile.default
 	@echo "*** making $@ ***"
 	-[ -f $@ ] && cp $@ $(CACHE)/.profile.old || :
-	cp $(CACHE)/profile.default $(CACHE)/.profile
+	cp $(CACHE)/profile.default $(HOME)/.profile
 	@echo "Please run '. $@' or close and reopen terminal"
 
 $(HOME)/.bash_profile: $(ROOT)/.bash_profile
