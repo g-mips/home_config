@@ -1,0 +1,41 @@
+browser "/usr/sbin/w3m %u"
+macro m set browser "/usr/sbin/mpv %u"; open-in-browser ; set browser "/usr/bin/w3m %u"
+macro f set browser "/usr/bin/firefox %u"; open-in-browser ; set browser "/usr/bin/w3m %u"
+
+mark-as-read-on-hover yes
+
+# unbind keys
+unbind-key ENTER
+unbind-key j
+unbind-key k
+unbind-key J
+unbind-key K
+
+# bind keys - vim style
+bind-key j down
+bind-key k up
+bind-key l open
+bind-key h quit
+
+# proxy-auth-method (parameters: <method>; default value: any)
+#            Set proxy authentication method. Allowed values: any, basic, digest, digest_ie (only available with libcurl 7.19.3 and newer), gssnegotiate, ntlm and anysafe. (example: proxy-auth-method
+#            ntlm)
+
+#       proxy-auth (parameters: <auth>; default value: n/a)
+#           Set the proxy authentication string. (example: proxy-auth user:password)
+
+#proxy-type socks5
+#       proxy-type (parameters: <type>; default value: http)
+#           Set proxy type. Allowed values: http, socks4, socks4a, socks5 and socks5h. (example: proxy-type socks5)
+
+#proxy localhost:9050
+#       proxy (parameters: <server:port>; default value: n/a)
+#           Set the proxy to use for downloading RSS feeds. (Don’t forget to actually enable the proxy with use-proxy yes.) (example: proxy localhost:3128)
+
+# Colors
+color listfocus        color223 color236 bold
+color listfocus_unread color223 color236 bold
+color info             color235 color142 bold
+
+# Include includes config file
+include "/home/gmips/.cache/newsboat/includes.config"
