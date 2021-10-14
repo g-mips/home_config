@@ -1,6 +1,6 @@
 BASE := $(shell dirname $(CURDIR))
 ROOT = $(BASE)/bash
-CACHE = $(XDG_CACHE_HOME)/bash
+CACHE = $(HOME)/.cache/bash
 
 $(shell mkdir -p $(CACHE))
 

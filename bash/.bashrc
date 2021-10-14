@@ -28,6 +28,20 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Are we in a WSL environment?
+if [ ! -z "$WSLENV" ]
+then
+    if [ $(grep -oE 'gcc version ([0-9]+)' /proc/version | awk '{print $3}') -gt 5 ]
+    then
+        export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+        export PULSE_SERVER=tcp:$(grep nameserver /etc/resolv.conf | awk '{print $2}');
+    else
+        export DISPLAY=:0
+    fi
+
+    xrdb ~/.Xresources
+fi
+
 mkdir -p $XDG_CACHE_HOME/tmux &> /dev/null
 [ -z "$TMUX" ] && echo $DISPLAY > $XDG_CACHE_HOME/tmux/display_var
 [ ! -z "$TMUX" ] && export DISPLAY=$(cat $XDG_CACHE_HOME/tmux/display_var)

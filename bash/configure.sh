@@ -1,6 +1,6 @@
 #!/bin/sh
 ROOT=$(pwd)
-[ -z "$XDG_CACHE_DIR" ] && CACHE_DIR=$HOME/.cache && CACHE_DIR=$XDG_CACHE_HOME
+[ -z "$XDG_CACHE_HOME" ] && CACHE_DIR=$HOME/.cache || CACHE_DIR=$XDG_CACHE_HOME
 BASH_CONFIG_FILE=$CACHE_DIR/bash/bashrc.default
 INPUT_CONFIG_FILE=$CACHE_DIR/bash/inputrc.default
 BASH_PROFILE_FILE=$CACHE_DIR/bash/profile.default
