@@ -1,4 +1,4 @@
-function start_agent {
+start_agent () {
     # Check to see if this is a multi user environment
     if [ $(/usr/bin/ls -1 /home/ | sed '/lost+found/d' | wc -l) -eq 1 ]
     then
@@ -15,7 +15,8 @@ function start_agent {
 if [ -f "${SSH_ENV}" ]
 then
      . "${SSH_ENV}" > /dev/null
-     ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+     ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent > /dev/null || {
+         killall -9 ssh-agent
          start_agent;
      }
 else
