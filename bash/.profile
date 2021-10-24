@@ -18,6 +18,9 @@ export BROWSER='/usr/bin/firefox:/usr/bin/qutebrowser'
 # Setup pager
 export PAGER='/usr/bin/less'
 
+# Setup terminal
+export TERMINAL="/usr/bin/alacritty"
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 export HISTCONTROL=ignoreboth
@@ -35,7 +38,8 @@ export TERM=alacritty
 # Where the SSH environment is found
 export SSH_ENV="$HOME/.ssh/environment"
 
-export TERMINAL="/usr/bin/alacritty"
+# Setup default prompt (Changes if using bash_prompt file)
+export PS1="\$ "
 
 # XDG Base Directory
 export XDG_DATA_HOME="$HOME/.local/share"
@@ -48,3 +52,4 @@ export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority"
 export LESSHISTFILE="-"
 export INPUTRC="$XDG_CONFIG_HOME/bash/.inputrc"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
+export XCURSOR_PATH="$XDG_DATA_HOME/icons"
