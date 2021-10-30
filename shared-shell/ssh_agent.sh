@@ -16,7 +16,7 @@ if [ -f "${SSH_ENV}" ]
 then
      . "${SSH_ENV}" > /dev/null
      ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent > /dev/null || {
-         killall -9 ssh-agent
+         killall -9 ssh-agent > /dev/null 2>&1
          start_agent;
      }
 else

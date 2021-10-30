@@ -53,3 +53,25 @@ export LESSHISTFILE="-"
 export INPUTRC="$XDG_CONFIG_HOME/bash/.inputrc"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
 export XCURSOR_PATH="$XDG_DATA_HOME/icons"
+
+if [ ! -z "$WSLENV" ]
+then
+    if [ $(grep -oE 'gcc version ([0-9]+)' /proc/version | awk '{print $3}') -gt 5 ]
+    then
+        export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+        export PULSE_SERVER=tcp:$(grep nameserver /etc/resolv.conf | awk '{print $2}');
+    else
+        export DISPLAY=:0
+    fi
+
+    xrdb ~/.Xresources
+fi
+
+# Turn off CTRL-S and CTRL-Q. They are annoying and unneeded (in most cases).
+stty -ixon
+
+# Source in the extra files
+. ud
+. aliases.sh
+. prompt.sh
+. ssh-agent.sh
