@@ -4,13 +4,14 @@ LOCAL_BIN_SCRIPTS = $(patsubst suppliments/%.sh, $(LOCAL_BIN)/%.sh, $(SCRIPTS))
 CACHE = $(HOME)/.cache/posix-sh
 
 $(shell mkdir -p $(CACHE))
+$(shell mkdir -p $(LOCAL_BIN))
 
 .PHONY: all
 all: $(HOME)/.profile $(LOCAL_BIN_SCRIPTS)
 
 $(HOME)/.profile: profile.sh
 	@printf "Installing $? to $@\n"
-	-[ -f $@ ] && cp $@ $(CACHE)/.profile.old || :
+	@-[ -f $@ ] && cp $@ $(CACHE)/.profile.old || :
 	cp $? $@
 
 $(LOCAL_BIN)/%.sh: suppliments/%.sh

@@ -50,7 +50,7 @@ export XDG_STATE_HOME="$HOME/.local/state"
 # ~/ Cleanup
 export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority"
 export LESSHISTFILE="-"
-export INPUTRC="$XDG_CONFIG_HOME/bash/.inputrc"
+export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc.conf"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
 export XCURSOR_PATH="$XDG_DATA_HOME/icons"
 
@@ -71,7 +71,7 @@ fi
 stty -ixon
 
 # Source in the extra files
-. ud
+. ud.sh
 . aliases.sh
 . prompt.sh
-. ssh-agent.sh
+. ssh_agent.sh

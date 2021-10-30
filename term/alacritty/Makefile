@@ -10,7 +10,7 @@ $(shell mkdir -p $(CONFIG))
 
 $(CONFIG)/$(CONFIG_FILE): $(CONFIG_FILE)
 	@printf "Copying $? to $@\n"
-	-[ -f $@ ] && cp $@ $(CACHE)/$(CONFIG_FILE).old || :
+	@-[ -f $@ ] && cp $@ $(CACHE)/$(CONFIG_FILE).old || :
 	cp $? $@
 
 .PHONY: restore
