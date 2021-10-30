@@ -1,8 +1,32 @@
+# Dependencies
+# tput
+# test
+# hostname
+# whoami
+# mkdir
+# dirname
+# cat
+# grep
+# sed
+# printf
+# read
+# alias
+# git
+# timeout
+# set
+# basename
+# cut
+# bind
+
 # Determine if we support color
 NUM_COLORS=$(tput colors 2> /dev/null)
-[ $? -eq 0 -a $NUM_COLORS > 2 ] && COLOR_PROMPT=yes
+[ $? -eq 0 -a $NUM_COLORS -gt 2 ] && COLOR_PROMPT=yes
 
-# Setup cache file
+# Make sure we have HOSTNAME and USER set
+[ -z "$HOSTNAME" ] && HOSTNAME=$(hostname -s)
+[ -z "$USER" ] && USER=$(whoami)
+
+# Setup cache file (TODO: Change location [used by ZSH as well])
 CACHE_FILE=$XDG_CACHE_HOME/bash/prompt_config
 [ ! -d $XDG_CACHE_HOME/bash ] && mkdir -p $(dirname $CACHE_FILE) > /dev/null 2>&1
 [ ! -f $CACHE_FILE ] && cat >> $CACHE_FILE << EOF
@@ -54,7 +78,7 @@ toggle_right_aligned () {
         $CACHE_FILE) || \
         printf "R_ALIGNED=\"$R_ALIGNED\"" >> $CACHE_FILE
 
-    [ "$R_ALIGNED" = "yes" ] && [ "$SIMPLE_PROMPT" != "no" -o "$ML_PROMPT" != "yes" ] && \
+    [ -z "$ZSH_VERSION" ] && [ "$R_ALIGNED" = "yes" ] && [ "$SIMPLE_PROMPT" != "no" -o "$ML_PROMPT" != "yes" ] && \
         printf "WARNING: Using right aligned with a single line prompt gives some odd behavior. " && \
         printf "If you start to write into the the right side, it will be overwritten. If you " && \
         printf "backspace, the right side will disappear. The mode can't be properly shown in " && \
@@ -138,167 +162,235 @@ customize_prompt () {
 }
 alias cp-i=customize_prompt
 
+# For Bash:
 # Color codes are \033[<code>m
 # The brackets (\[ and \]) are for using color codes in a prompt.
 # They tell bash that they are non-printing characters. They make
 # the prompt not do weird things.
+#
+# ZSH does not use color codes. Instead it has its own syntax
 if [ "$COLOR_PROMPT" = "yes" ]
 then
-    FULL_RESET="\[\033[0m\]"
-    FG_RESET="\[\033[39m\]"
+    [ ! -z "$BASH" ] && BASH_BEG_NON_PRINT="\[" && BASH_END_NON_PRINT="\]"
+    [ -z "$BASH" ] && BASH_BEG_NON_PRINT= && BASH_END_NON_PRINT=
 
-    PURPLE="\[\033[35m\]"
-    GREEN="\[\033[32m\]"
-    RED="\[\033[31m\]"
-    YELLOW="\[\033[33m\]"
-    CYAN="\[\033[36m\]"
+    # TODO: Research if the ZSH versions can be different
+    [ -z "$ZSH_VERSION" ] && FULL_RESET="$BASH_BEG_NON_PRINT\033[0m$BASH_END_NON_PRINT" || FULL_RESET="%f"
+    [ -z "$ZSH_VERSION" ] && FG_RESET="$BASH_BEG_NON_PRINT\033[39m$BASH_END_NON_PRINT" || FG_RESET="%f"
 
-    GREEN_BG="\[\033[0;42;30m\]"
-    FULL_BG="\[\033[48;5;11m\]"
+    [ -z "$ZSH_VERSION" ] && PURPLE="$BASH_BEG_NON_PRINT\033[35m$BASH_END_NON_PRINT" || PURPLE="%F{#D699B6}"
+    [ -z "$ZSH_VERSION" ] && GREEN="$BASH_BEG_NON_PRINT\033[32m$BASH_END_NON_PRINT" || GREEN="%F{green}"
+    [ -z "$ZSH_VERSION" ] && RED="$BASH_BEG_NON_PRINT\033[31m$BASH_END_NON_PRINT" || RED="%F{red}"
+    [ -z "$ZSH_VERSION" ] && YELLOW="$BASH_BEG_NON_PRINT\033[33m$BASH_END_NON_PRINT" || YELLOW="%F{yellow}"
+    [ -z "$ZSH_VERSION" ] && CYAN="$BASH_BEG_NON_PRINT\033[36m$BASH_END_NON_PRINT" || CYAN="%F{cyan}"
+
+    # TODO: Research if there are background color commands for ZSH
+    GREEN_BG="$BASH_BEG_NON_PRINT\033[0;42;30m$BASH_END_NON_PRINT"
+    FULL_BG="$BASH_BEG_NON_PRINT\033[48;5;11m$BASH_END_NON_PRINT"
 fi
-
-
-SINGLE_LINE_PROMPT="[$GREEN$SHLVL$FULL_RESET]─[$GREEN\t$FULL_RESET]─[$PURPLE\u$FULL_RESET@$YELLOW\h$FULL_RESET]"
 
 dir_is_git_repo () {
     git rev-parse --is-inside-work-tree > /dev/null 2>&1
 }
 
-join_by () { local IFS="$1"; shift; printf "$*"; }
-
 get_length_of_non_color_parts () {
-    declare -a ARRAY_VAR=("${!1}")
-    local ARRAY_VAR_STRING_LEN=0
-    for index in ${!ARRAY_VAR[*]}
+    LEN=$#
+    : $((STR_LEN=0))
+    : $((i=0))
+    while [ "$((i != LEN))" -ne 0 ]
     do
-        [ "$(($index % 2))" = "0" ] && \
-            ARRAY_VAR_STRING_LEN=$(($ARRAY_VAR_STRING_LEN + \
-                ${#ARRAY_VAR[$index]}))
+        [ "$((i % 2))" = "0" ] && LEN_TO_ADD=${#1} && \
+            : $((STR_LEN = STR_LEN + LEN_TO_ADD))
+        : $((i = i + 1))
+        shift
     done
-    printf $ARRAY_VAR_STRING_LEN
+    printf $STR_LEN
 }
 
-calculate_compensation () {
-    # assumes PS1R and PS1R_COMPENSATION both exist
-    for (( i = 0; i < ${#PS1R}; i++ ))
-    do
-        [ "${PS1R:$i:1}" = "\\" ] && START_COUNT=1
+# Bash only function
+if [ ! -z "$BASH" ]
+then
+    calculate_compensation () {
+        # assumes RPROMPT and PS1R_COMPENSATION both exist
+        PS1R_LEN=${#RPROMPT}
+        : $((i=0))
+        while [ "$((i != PS1R_LEN))" -ne 0 ]
+        do
+            [ "${RPROMPT:$i:1}" = "\\" ] && START_COUNT=1
 
-        # Add in the time (8 characters for the time, - 6 because
-        # 2 characters represent the time (\t)
-        [ $START_COUNT -eq 1 ] && [ "${PS1R:$(($i+1)):1}" = "t" ] && \
-            PS1R_COMPENSATION=$(( $PS1R_COMPENSATION - 6 )) && \
-            i=$(( $i + 1 )) && START_COUNT=0
+            # Add in the time (8 characters for the time, - 6 because
+            # 2 characters represent the time (\t)
+            [ $START_COUNT -eq 1 ] && [ "${RPROMPT:$(($i+1)):1}" = "t" ] && \
+                PS1R_COMPENSATION=$(( $PS1R_COMPENSATION - 6 )) && \
+                i=$(( $i + 1 )) && START_COUNT=0
 
-        # Add color codes
-        [ $START_COUNT -eq 1 ] && \
-            PS1R_COMPENSATION=$(( $PS1R_COMPENSATION + 1 )) && \
-            [ "${PS1R:$i:1}" = "]" ] && START_COUNT=0
-    done
-}
+            # Add color codes
+            [ $START_COUNT -eq 1 ] && \
+                PS1R_COMPENSATION=$(( $PS1R_COMPENSATION + 1 )) && \
+                [ "${RPROMPT:$i:1}" = "]" ] && START_COUNT=0
+            : $((i=i+1))
+        done
+    }
+fi
 
 setup_git_info () {
     if [ "$SHOW_GIT_INFO" = "yes" ]
     then
+        local GIT_STATUS=
         local IS_GIT_REPO=$(dir_is_git_repo; printf $?)
         [ $IS_GIT_REPO -eq 0 ] && [ -n "$(timeout 2 git status -uno --short 2> /dev/null)" ] && \
-            GIT_STATUS=" *"
-        [ $IS_GIT_REPO -eq 0 ] && GIT_INFO=(" (" "$GREEN" \
+            GIT_STATUS="*"
+        [ $IS_GIT_REPO -eq 0 ] && set -- " (" "$GREEN" \
             "$(timeout 2 git branch | grep "\*" | rev | cut -d' ' -f1 | rev | \
-                cut -d')' -f1)" "$FG_RESET" ")" "$RED" "$GIT_STATUS" "$FG_RESET")
+            cut -d')' -f1)" "$FG_RESET" ")" "$RED" " $GIT_STATUS" "$FG_RESET"
+        GIT_INFO_LEN=$(get_length_of_non_color_parts "$@")
+        printf "%s%s%s" "$GIT_INFO_LEN" "-" "$@"
     fi
 }
 
+[ ! -z "$BASH" ] && FULL_PATH_COMMAND='\w'
+[ ! -z "$ZSH_VERSION" ] && FULL_PATH_COMMAND='%0~'
+
+[ ! -z "$BASH" ] && BASENAME_COMMAND='\W'
+[ ! -z "$ZSH_VERSION" ] && BASENAME_COMMAND='%1~'
+
+[ ! -z "$BASH" ] && USER_COMMAND="\u"
+[ ! -z "$ZSH_VERSION" ] && USER_COMMAND="%n"
+
+[ ! -z "$BASH" ] && TIME_COMMAND="\t"
+[ ! -z "$ZSH_VERSION" ] && TIME_COMMAND="%D{%T}"
+
+[ ! -z "$BASH" ] && HOSTNAME_COMMAND="\h"
+[ ! -z "$ZSH_VERSION" ] && HOSTNAME_COMMAND="%m"
+
 multiline_prompt () {
-    # The different parts of PS1
-    local SHLVL_INFO=(" (" "$GREEN" "$SHLVL" "$FG_RESET" ")")
-    local PRMPT_HOOK=(" " "$GREEN" "┌─" "$FG_RESET")
-    local PC_INFO=("[" "$PURPLE" "$USER" "$FG_RESET" "@" "$YELLOW" "$HOSTNAME" "$FG_RESET" "]")
-    local DIR_INFO=("[" "$CYAN" "$([ "$SHOW_FULL_PATH" = "yes" ] && printf $(printf $PWD | sed -e "s|$HOME|~|") || printf $(basename $PWD))" "$FG_RESET" "]")
-    local GIT_INFO=
-    local GIT_STATUS=
-    local DATE_INFO=
+    # ------ The different parts of PS1 ------
 
-    # Create the git info part
-    setup_git_info
-    [ "$EXIT_CODE_SETTING" = "yes" ] && \
-        PROMPT_EXIT_CODE_STR=-[$PROMPT_EXIT_CODE] || PROMPT_EXIT_CODE_STR=
+    # Setup shell level
+    [ ! -z "$SHLVL" ] && set -- " (" "$GREEN" "$SHLVL" "$FG_RESET" ") " || \
+        set -- "  "
 
-    # Set up the different parts of the prompt (left side, right side, prompt)
-    local PS1R="$FG_RESET[$GREEN\t$FULL_RESET]"
-    [ "$R_ALIGNED" != "yes" ] && DATE_INFO="$GREEN─$PS1R"
-    local PS1L="$(join_by "" "${SHLVL_INFO[@]}")$(join_by "" "${PRMPT_HOOK[@]}")$(join_by "" "${PC_INFO[@]}")$(join_by "" "${DIR_INFO[@]}")$DATE_INFO$PROMPT_EXIT_CODE_STR$(join_by "" "${GIT_INFO[@]}")"
-    local PS1_PRMPT="    $GREEN└─$FG_RESET$EXIT_COLOR■$FULL_RESET "
+    # Save shell level length for later
+    SHLVL_INFO_LEN=$(get_length_of_non_color_parts "$@")
 
-    # Get the length of the left side of PS1
-    local PS1L_LEN=0
+    # Setup left side of first line of prompt and
+    # potential right side of first line
+    set -- "$@" "$GREEN" " ┌─" "$FG_RESET" "[" "$PURPLE" "$USER" "$FG_RESET" \
+        "@" "$YELLOW" "$HOSTNAME" "$FG_RESET" "]" "$FG_RESET" "[" "$CYAN" \
+        "$([ "$SHOW_FULL_PATH" = "yes" ] && \
+        printf $(printf $PWD | sed -e "s|$HOME|~|") || \
+        printf $(basename $PWD))" "$FG_RESET" "]"
+    RPROMPT="${FG_RESET}[$GREEN$TIME_COMMAND$FULL_RESET]"
+    [ "$R_ALIGNED" != "yes" ] && set -- "$@" "$GREEN" "─" "$RPROMPT" && RPROMPT=
+    [ "$EXIT_CODE_SETTING" = "yes" ] && set -- "$@" "$FG_RESET" "[$PROMPT_EXIT_CODE]" "$FG_RESET"
+
+    # Get the length of the left side of PS1 except for the GIT_INFO_LEN
+    local PS1L_LEN=$COLUMNS
     if [ "$R_ALIGNED" = "yes" ]
     then
-        PS1L_LEN=$(($PS1L_LEN + $(get_length_of_non_color_parts SHLVL_INFO[@])))
-        PS1L_LEN=$(($PS1L_LEN + $(get_length_of_non_color_parts PRMPT_HOOK[@])))
-        PS1L_LEN=$(($PS1L_LEN + $(get_length_of_non_color_parts PC_INFO[@])))
-        PS1L_LEN=$(($PS1L_LEN + $(get_length_of_non_color_parts DIR_INFO[@])))
-        PS1L_LEN=$(($PS1L_LEN + $(get_length_of_non_color_parts GIT_INFO[@])))
-        PS1L_LEN=$(($PS1L_LEN + $(get_length_of_non_color_parts PROMPT_EXIT_CODE_STR)))
-    else
-        PS1R=
-        PS1L_LEN=$COLUMNS
+        PS1L_LEN=$(get_length_of_non_color_parts "$@")
     fi
 
-    # Add in the amount to account for escaped sequences
-    local START_COUNT=0
-    local PS1R_COMPENSATION=0
-    [ "$R_ALIGNED" = "yes" ] && calculate_compensation
+    # Now setup the potential git info and add in the length
+    local FULL_GIT_INFO=$(setup_git_info)
+    local GIT_INFO_LEN=$(printf "%s" "$FULL_GIT_INFO" | cut -d'-' -f1)
+    local GIT_INFO=$(printf "%s" "$FULL_GIT_INFO" | cut -d'-' -f2-)
+    set -- "$@" "$GIT_INFO"
+    local PS1L="$(printf "%s" "$@")"
+    : $((PS1L_LEN=PS1L_LEN + GIT_INFO_LEN))
 
-    bind "set show-mode-in-prompt On"
+    # Setup the second line
+    [ ! -z "$BASH" ] && local PS1_PRMPT="" || local PS1_PRMPT=" "
+    : $((i=0))
+    while [ "$((i != SHLVL_INFO_LEN))" -ne 0 ]
+    do
+        PS1_PRMPT=" "$PS1_PRMPT
+        : $((i = i + 1))
+    done
+    PS1_PRMPT=$PS1_PRMPT"$GREEN└─$FG_RESET$EXIT_COLOR■$FULL_RESET "
 
-    # Put it all together now
-    PS1="`printf "%s%$((${COLUMNS}-${PS1L_LEN}+${PS1R_COMPENSATION}))s\n%s" "$PS1L" "$PS1R" "$PS1_PRMPT"`"
+    # Put it all together for non Bash prompt
+    PS1="$(printf "%s\n%s" "$PS1L" "$PS1_PRMPT")"
+    if [ ! -z "$BASH" ]
+    then
+        # Add in the amount to account for escaped sequences
+        local START_COUNT=0
+        local PS1R_COMPENSATION=0
+        [ "$R_ALIGNED" = "yes" ] && calculate_compensation
+
+        bind "set show-mode-in-prompt On"
+
+        # Put it all together now for Bash prompt
+        PS1="`printf "%s%$((${COLUMNS}-${PS1L_LEN}+${PS1R_COMPENSATION}))s\n%s" "$PS1L" "$RPROMPT" "$PS1_PRMPT"`"
+    fi
 }
 
 singleline_prompt () {
+    [ -z "$SHLVL" ] && local SINGLE_SHLVL_INFO= || local SINGLE_SHLVL_INFO="[$GREEN$SHLVL$FULL_RESET]─"
+    [ "$R_ALIGNED" = "yes" ] && local DATE_INFO= || local DATE_INFO="[$GREEN$TIME_COMMAND$FULL_RESET]─"
+
     local GIT_INFO=
     local GIT_STATUS=
 
-    setup_git_info
+    local FULL_GIT_INFO=$(setup_git_info)
+    local GIT_INFO_LEN=$(printf "%s" "$FULL_GIT_INFO" | cut -d'-' -f1)
+    local GIT_INFO=$(printf "%s" "$FULL_GIT_INFO" | cut -d'-' -f2-)
 
+    # Setup PS1
     [ "$EXIT_CODE_SETTING" = "yes" ] && \
         PROMPT_EXIT_CODE_STR=-[$PROMPT_EXIT_CODE] || PROMPT_EXIT_CODE_STR=
-    PS1=" $SINGLE_LINE_PROMPT─[$CYAN$([ "$SHOW_FULL_PATH" = "yes" ] && printf '\w' || printf '\W')$FULL_RESET]$PROMPT_EXIT_CODE_STR$GREEN-$EXIT_COLOR■$FULL_RESET$(join_by "" "${GIT_INFO[@]}") "
+    PS1=" $SINGLE_SHLVL_INFO${DATE_INFO}[$PURPLE$USER_COMMAND$FULL_RESET@$YELLOW$HOSTNAME_COMMAND$FULL_RESET]─[$CYAN$(\
+        [ "$SHOW_FULL_PATH" = "yes" ] && \
+        printf "%s" "$FULL_PATH_COMMAND" || \
+        printf "%s" "$BASENAME_COMMAND")$FULL_RESET]$PROMPT_EXIT_CODE_STR$GREEN-$EXIT_COLOR■$FULL_RESET$GIT_INFO "
 
     if [ "$R_ALIGNED" = "yes" ]
     then
-        local PS1R="[$PURPLE\t$FULL_RESET]"
-        local PS1R_COMPENSATION=0
-        local START_COUNT=0
+        # ZSH just needs RPROMPT set
+        RPROMPT="[$PURPLE$TIME_COMMAND$FULL_RESET]"
+        if [ ! -z "$BASH" ]
+        then
+            local PS1R_COMPENSATION=0
+            local START_COUNT=0
 
-        calculate_compensation
+            calculate_compensation
 
-        bind "set show-mode-in-prompt Off"
+            bind "set show-mode-in-prompt Off"
 
-        PS1="`printf "%$((${COLUMNS}+${PS1R_COMPENSATION}-1))s\r%s" "$PS1R" "$PS1"`"
+            # Bash will need PS1 set to include the right aligned portion
+            PS1="$(printf "%$((${COLUMNS}+${PS1R_COMPENSATION}))s\r%s" "$RPROMPT" " $PS1")"
+        fi
     else
-        bind "set show-mode-in-prompt On"
+        RPROMPT=
+        [ ! -z "$BASH" ] && bind "set show-mode-in-prompt On"
     fi
 }
 
 simple_prompt () {
+    # Setup the PS1 var
     [ "$SIMPLE_PROMPT" = "yes" ] && PS1=" $EXIT_COLOR\$$FULL_RESET "
-    [ "$SIMPLE_PROMPT" = "path" ] && PS1=" $CYAN$([ "$SHOW_FULL_PATH" = "yes" ] && printf '\w' || printf '\W')$FULL_RESET $EXIT_COLOR\$$FULL_RESET "
+    [ "$SIMPLE_PROMPT" = "path" ] && PS1=" $CYAN$([ "$SHOW_FULL_PATH" = "yes" ] && \
+        printf "%s" "$FULL_PATH_COMMAND" || printf "%s" "$BASENAME_COMMAND")$FULL_RESET $EXIT_COLOR\$$FULL_RESET "
 
     if [ "$R_ALIGNED" = "yes" ]
     then
-        local PS1R="[$PURPLE\t$FULL_RESET]"
-        local PS1R_COMPENSATION=0
-        local START_COUNT=0
+        # For ZSH
+        RPROMPT="[$PURPLE$TIME_COMMAND$FULL_RESET]"
+        if [ ! -z "$BASH" ]
+        then
+            local PS1R_COMPENSATION=0
+            local START_COUNT=0
 
-        calculate_compensation
+            calculate_compensation
 
-        bind "set show-mode-in-prompt Off"
+            bind "set show-mode-in-prompt Off"
 
-        PS1="`printf "%$((${COLUMNS}+${PS1R_COMPENSATION}-1))s\r%s" "$PS1R" "$PS1"`"
+            # Bash needs to include the RPROMPT in PS1
+            PS1="$(printf "%$((${COLUMNS}+${PS1R_COMPENSATION}))s\r%s" "$RPROMPT" " $PS1")"
+        fi
     else
-        bind "set show-mode-in-prompt On"
+        RPROMPT=
+        [ ! -z "$BASH" ] && bind "set show-mode-in-prompt On"
     fi
 }
 
@@ -313,12 +405,20 @@ prompt () {
         EXIT_COLOR=$RED
     fi
 
+    # Simple prompt takes priority over all
     if [ "$SIMPLE_PROMPT" != "no" ]
     then
         simple_prompt
+    elif [ "$ML_PROMPT" = "yes" ]
+    then
+        multiline_prompt
     else
-        [ "$ML_PROMPT" = "yes" ] && multiline_prompt || singleline_prompt
+        singleline_prompt
     fi
 }
 
-PROMPT_COMMAND='prompt'
+# Setup the prompt based on the shell we are using
+[ -z "$BASH" -a -z "$ZSH_VERSION" ] && \
+    PS1="$(printf "$PURPLE$USER$FULL_RESET@$YELLOW$HOSTNAME$FULL_RESET $ ")"
+[ ! -z "$BASH" ] && PROMPT_COMMAND='prompt'
+[ ! -z "$ZSH_VERSION" ] && precmd () { prompt; }
