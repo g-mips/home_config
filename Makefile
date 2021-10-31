@@ -14,9 +14,9 @@ restore_$(1):
 endef
 
 .PHONY: all
-all: $(CONFIG_EDITOR) $(CONFIG_VC) term
+all: $(CONFIG_ITEMS) term
 
 .PHONY: restore
-restore: $(CONFIG_EDITOR) $(CONFIG_VC) term
+restore: $(CONFIG_ITEMS) term
 
-$(foreach i,$(CONFIG_EDITOR) $(CONFIG_VC) term,$(eval $(call MAKE_RULE,$(i))))
+$(foreach i,$(CONFIG_ITEMS) term,$(eval $(call MAKE_RULE,$(i))))
