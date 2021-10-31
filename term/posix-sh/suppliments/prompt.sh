@@ -422,3 +422,6 @@ prompt () {
     PS1="$(printf "$PURPLE$USER$FULL_RESET@$YELLOW$HOSTNAME$FULL_RESET $ ")"
 [ ! -z "$BASH" ] && PROMPT_COMMAND='prompt'
 [ ! -z "$ZSH_VERSION" ] && precmd () { prompt; }
+
+# Return true
+true

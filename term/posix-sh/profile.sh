@@ -32,13 +32,10 @@ export HISTFILESIZE=2000
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
-# Setup TERM for tmux/screen
-export TERM=alacritty
-
 # Where the SSH environment is found
 export SSH_ENV="$HOME/.ssh/environment"
 
-# Setup default prompt (Changes if using bash_prompt file)
+# Setup default prompt (Changes if using prompt.sh file)
 export PS1="\$ "
 
 # XDG Base Directory
@@ -53,6 +50,7 @@ export LESSHISTFILE="-"
 export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc.conf"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
 export XCURSOR_PATH="$XDG_DATA_HOME/icons"
+export VIMINIT='let $MYVIMRC="$XDG_CONFIG_HOME/vim/vimrc" | source $MYVIMRC'
 
 if [ ! -z "$WSLENV" ]
 then
@@ -72,6 +70,4 @@ stty -ixon
 
 # Source in the extra files
 . ud.sh
-. aliases.sh
-. prompt.sh
 . ssh_agent.sh
