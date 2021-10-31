@@ -20,5 +20,5 @@ $(CONFIG)/config: config $(INIT_CONFIG_FILE)
 
 .PHONY: restore
 restore:
-	@-[ -f $(CACHE)/config.old ] && printf "Restoring old $(CONFIG)"
+	@-[ -f $(CACHE)/config.old ] && printf "Restoring old $(CONFIG)\n"
 	-[ -f $(CACHE)/config.old ] && cp $(CACHE)/config.old $(CONFIG)/config
