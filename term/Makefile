@@ -14,9 +14,9 @@ restore_$(1):
 endef
 
 .PHONY: all
-all: $(SHELL) $(EMULATOR) $(MULTIPLEXER) $(OTHER) posix-sh
+all: $(CONFIG_SHELL) $(CONFIG_EMULATOR) $(CONFIG_MULTIPLEXER) $(CONFIG_OTHER) posix-sh
 
 .PHONY: restore
-restore: restore_$(SHELL) restore_$(EMULATOR) restore_$(MULTIPLEXER) restore_$(OTHER) restore_posix-sh
+restore: restore_$(CONFIG_SHELL) restore_$(CONFIG_EMULATOR) restore_$(CONFIG_MULTIPLEXER) restore_$(CONFIG_OTHER) restore_posix-sh
 
-$(foreach i,$(SHELL) $(EMULATOR) $(MULTIPLEXER) $(OTHER) posix-sh,$(eval $(call MAKE_RULE,$(i))))
+$(foreach i,$(CONFIG_SHELL) $(CONFIG_EMULATOR) $(CONFIG_MULTIPLEXER) $(CONFIG_OTHER) posix-sh,$(eval $(call MAKE_RULE,$(i))))

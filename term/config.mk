@@ -1,4 +1,4 @@
-MULTIPLEXER := tmux
-SHELL := bash
-EMULATOR := alacritty
-OTHER := readline
+CONFIG_MULTIPLEXER := tmux
+CONFIG_SHELL := bash
+CONFIG_EMULATOR := alacritty
+CONFIG_OTHER := readline
