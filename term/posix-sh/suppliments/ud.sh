@@ -4,6 +4,6 @@
 
 [ $SOURCED -eq 0 ] && echo Please source $0 && exit 1
 
-mkdir -p $XDG_CACHE_HOME/tmux &> /dev/null
+mkdir -p $XDG_CACHE_HOME/tmux > /dev/null 2>&1
 [ -z "$TMUX" ] && echo $DISPLAY > $XDG_CACHE_HOME/tmux/display_var
 [ ! -z "$TMUX" ] && export DISPLAY=$(cat $XDG_CACHE_HOME/tmux/display_var)
