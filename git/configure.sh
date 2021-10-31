@@ -1,18 +1,17 @@
 #!/bin/sh
-ROOT=$(pwd)
-CONFIG_FILE=${ROOT}/configuration
+CONFIG_FILE=$HOME/.cache/git/init_config
 
-echo "******** GIT CONFIGURATION ********"
-echo "'user' configuration"
+printf "******** GIT CONFIGURATION ********\n"
+printf "'user' configuration\n"
 
 read -p "Please enter 'email' value: " EMAIL
 read -p "Please enter 'name' value: " NAME
 
-echo "Writing 'user' configuration to 'configuration'"
-echo "EMAIL -- $EMAIL"
-echo "NAME -- $NAME"
+printf "Writing 'user' configuration to 'configuration'\n"
+printf "EMAIL -- $EMAIL\n"
+printf "NAME -- $NAME\n"
 
-cat > $CONFIG_FILE <<- EOF
-EMAIL = $EMAIL
-NAME = $NAME
+cat > $CONFIG_FILE << EOF
+	email = $EMAIL
+	name = $NAME
 EOF

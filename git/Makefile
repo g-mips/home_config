@@ -1,28 +1,24 @@
-BASE := $(shell dirname $(CURDIR))
-ROOT = $(BASE)/git
+CACHE := $(HOME)/.cache/git
+CONFIG := $(HOME)/.config/git
 
-CONFIG_FILE = $(ROOT)/configuration
+$(shell mkdir -p $(CACHE))
+$(shell mkdir -p $(CONFIG))
 
-ifeq ("","$(wildcard $(CONFIG_FILE))")
-$(error "Please run ./configure first")
-endif
-
-include $(CONFIG_FILE)
+INIT_CONFIG_FILE = $(CACHE)/init_config
 
 .PHONY: all
-all: $(HOME)/.gitconfig clean
+all: $(CONFIG)/config
 
-$(HOME)/.gitconfig: $(ROOT)/.gitconfig $(ROOT)/.gitconfig.default
-	cp $(ROOT)/.gitconfig.default $(ROOT)/.gitconfig.default.tmp
-	sed -i "s|BASE|$(BASE)|" $(ROOT)/.gitconfig.default.tmp
-	sed -i "s|EMAIL|$(EMAIL)|" $(ROOT)/.gitconfig.default.tmp
-	sed -i "s|NAME|$(NAME)|" $(ROOT)/.gitconfig.default.tmp
-	cp $(ROOT)/.gitconfig.default.tmp $(HOME)/.gitconfig
+$(INIT_CONFIG_FILE): configure.sh
+	./configure.sh
 
-.PHONY: clean
-clean:
-	-rm $(ROOT)/.gitconfig.default.tmp
+$(CONFIG)/config: config $(INIT_CONFIG_FILE)
+	@printf "Copying $< to $@\n"
+	@-[ -f $@ ] && cp $@ $(CACHE)/config.old
+	cp $< $@
+	printf "\n[user]\n" | cat - $(INIT_CONFIG_FILE) >> $(CONFIG)/config
 
-.PHONY: hard_clean
-hard_clean: clean
-	-rm $(CONFIG_FILE)
+.PHONY: restore
+restore:
+	@-[ -f $(CACHE)/config.old ] && printf "Restoring old $(CONFIG)"
+	-[ -f $(CACHE)/config.old ] && cp $(CACHE)/config.old $(CONFIG)/config

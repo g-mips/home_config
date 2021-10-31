@@ -1,6 +1,0 @@
-[include]
-	path = BASE/git/.gitconfig
-
-[user]
-	email = EMAIL
-	name = NAME

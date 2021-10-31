@@ -1,1 +1,2 @@
 CONFIG_EDITOR := vim
+CONFIG_VC := git
