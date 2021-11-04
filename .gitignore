@@ -1,10 +1,9 @@
 # EDITOR FILES #
 ################
 *~
-*.swp
-*.swo
+.*.sw*
+.*.sw*
 
 # TMP FILES #
 #############
 *.tmp
-configuration
