@@ -1,10 +1,12 @@
 #!/bin/sh
-[ -z "$XDG_CACHE_DIR" ] && CACHE_DIR=$HOME/.cache && CACHE_DIR=$XDG_CACHE_HOME
+set -e
+
+[ -z "$XDG_CACHE_HOME" ] && CACHE_DIR=$HOME/.cache || CACHE_DIR=$XDG_CACHE_HOME
 INIT_CONFIG_FILE="${CACHE_DIR}/config_config/gdb/gdbinit_extra"
 
 mkdir -p $(dirname $INIT_CONFIG_FILE) > /dev/null 2>&1
 
-echo "******** GDB CONFIGURATION ********"
+printf "******** GDB CONFIGURATION ********\n"
 
 read -N 1 -p "Do you want tui enabled by default (y|n)? " TUI
 

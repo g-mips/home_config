@@ -1,4 +1,6 @@
 #!/bin/sh
+set -e
+
 CACHE_DIR=$HOME/.cache/config_config/git
 CONFIG_FILE=$CACHE_DIR/config_extra
 
