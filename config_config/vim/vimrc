@@ -24,6 +24,8 @@ let $MYVIMRC="$XDG_CONFIG_HOME/vim/vimrc"
 " Plugin management
 execute pathogen#infect()
 
+let g:netrw_home=$XDG_CACHE_HOME.'/vim'
+
 syntax on
 filetype plugin indent on
 

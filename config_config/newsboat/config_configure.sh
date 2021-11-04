@@ -1,8 +1,8 @@
 #!/bin/sh
 [ -z "$XDG_CACHE_DIR" ] && CACHE_DIR=$HOME/.cache && CACHE_DIR=$XDG_CACHE_HOME
-INIT_CONFIG_FILE="${CACHE_DIR}/newsboat/init_config"
+INIT_CONFIG_FILE="${CACHE_DIR}/config_config/newsboat/config_extra"
 
-mkdir -p $CACHE_DIR/newsboat > /dev/null 2>&1
+mkdir -p $(dirname $INIT_CONFIG_FILE) > /dev/null 2>&1
 
 read -N 1 -p "Include TTRSS options? (y|n) " INCLUDE_TTRSS_OPTIONS
 

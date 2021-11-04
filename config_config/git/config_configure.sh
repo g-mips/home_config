@@ -1,5 +1,8 @@
 #!/bin/sh
-CONFIG_FILE=$HOME/.cache/git/init_config
+CACHE_DIR=$HOME/.cache/config_config/git
+CONFIG_FILE=$CACHE_DIR/config_extra
+
+mkdir -p $CACHE_DIR > /dev/null 2>&1
 
 printf "******** GIT CONFIGURATION ********\n"
 printf "'user' configuration\n"
@@ -12,6 +15,8 @@ printf "EMAIL -- $EMAIL\n"
 printf "NAME -- $NAME\n"
 
 cat > $CONFIG_FILE << EOF
+
+[user]
 	email = $EMAIL
 	name = $NAME
 EOF
