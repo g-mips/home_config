@@ -62,7 +62,7 @@ then
         export DISPLAY=:0
     fi
 
-    xrdb ~/.Xresources
+    xrdb ~/.config/xwindowsystem/.Xresources
 fi
 
 # Turn off CTRL-S and CTRL-Q. They are annoying and unneeded (in most cases).
