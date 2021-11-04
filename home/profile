@@ -51,6 +51,13 @@ export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc.conf"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
 export XCURSOR_PATH="$XDG_DATA_HOME/icons"
 export VIMINIT='let $MYVIMRC="$XDG_CONFIG_HOME/vim/vimrc" | source $MYVIMRC'
+export SQLITE_HISTORY="$XDG_CACHE_HOME/sqlite/sqlite_history"
+export WINEPREFIX="$XDG_CONFIG_HOME/wine/default"
+export CARGO_HOME="$XDG_CONFIG_HOME/cargo"
+export RUSTUP_HOME="$XDG_CONFIG_HOME/rustup"
+export GRADLE_USER_HOME="$XDG_CONFIG_HOME/gradle"
+export GOPATH="$XDG_DATA_HOME/go"
+export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 
 if [ ! -z "$WSLENV" ]
 then
