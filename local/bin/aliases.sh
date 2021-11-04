@@ -36,5 +36,9 @@ alias alert='notify-send --urgency=low -i \
     "$(history|tail -n1|sed -e \
     '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
+# tmux developers are terrible and won't implement XDG
+# Alias the tmux command to use the conf file found here
+alias tmux='tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf'
+
 # Jump into the default session of the terminal multiplexer
 alias sess='tmux -2 attach || tmux -2'

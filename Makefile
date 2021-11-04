@@ -3,7 +3,7 @@ CONFIG    := $(HOME)/.config
 
 HOME_FILES             := $(wildcard home/*)
 HOME_CONFIG_FILES      := $(filter-out %_configure.sh,$(wildcard config_home/*))
-HOME_REMOVE_FILES      := bash_login Xresources
+HOME_REMOVE_FILES      := bash_login Xresources gitconfig inputrc
 
 CONFIG_FILES           := $(wildcard config/*/*)
 CONFIG_CONFIG_FILES    := $(filter-out %_configure.sh,$(wildcard config_config/*/*))
