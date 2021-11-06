@@ -22,5 +22,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
+. ud.sh
 . aliases.sh
 . prompt.sh

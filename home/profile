@@ -76,5 +76,4 @@ fi
 stty -ixon
 
 # Source in the extra files
-. ud.sh
 . ssh_agent.sh
