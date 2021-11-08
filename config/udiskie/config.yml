@@ -1,0 +1,2 @@
+program_options:
+  notify_commmand: "kill -SIGRTMIN+7 $(pidof dwmblocks)"
