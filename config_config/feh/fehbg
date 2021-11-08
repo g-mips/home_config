@@ -1,2 +1,2 @@
 #!/bin/sh
-feh --no-fehbg --bg-center "$XDG_DATA_HOME/feh/trees.png"
+feh --no-fehbg --bg-center $1
