@@ -1,14 +1,17 @@
 start_agent () {
     # Check to see if this is a multi user environment
-    if [ $(/usr/bin/ls -1 /home/ | sed '/lost+found/d' | wc -l) -eq 1 ]
-    then
-        printf "Initialising new SSH agent...\n"
-        /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-        printf "Succeeded\n"
-        chmod 600 "${SSH_ENV}"
-        . "${SSH_ENV}" > /dev/null
-        /usr/bin/ssh-add;
-    fi
+    #NUM_USERS=$(/usr/bin/ls -1 /home/ | sed '/lost+found/d' | wc -l)
+    #[ $NUM_USERS -lt 2 ] && RUN_AGENT=1 || RUN_AGENT=0
+
+    #if [ $NUM_USERS -eq 1 ]
+    #then
+        #printf "Initialising new SSH agent...\n"
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+        #printf "Succeeded\n"
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+        #/usr/bin/ssh-add;
+    #fi
 }
 
 # Source SSH settings, if applicable
