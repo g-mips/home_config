@@ -1,15 +1,14 @@
 # Directories
 
-- `config` -- All `.config` files that need no configuration live in their folders under this directory.
-- `config_config` -- All `.config` files that need configuration live in their folders under this directory.
-- `extras` -- All extra files that are needed by the configuration scripts in `config_config` that the Makefile shouldn't know about.
-- `home` -- All dot files that live in the home directory.
-- `local` -- All `.local` files live here.
-- `old` -- All crusty unused files go here that I'm not willing to delete quite yet.
+- `config` -- Contains all `XDG_CONFIG_HOME` files.
+- `home` -- Contains all dot files from the home directory that can't live in the XDG_CONFIG_HOME.
+- `local` -- Contains all `.local` files.
+- `extras` -- Contains all extra files that are needed by the configuration scripts in `scripts`.
+- `old` -- Contains all crusty unused files go here that I'm not willing to delete quite yet.
 
 # Process
 
-`make` and then follow any on-screen instructions
+`./setup.sh` and then follow any on-screen instructions
 
 # Exclusion of packages
 

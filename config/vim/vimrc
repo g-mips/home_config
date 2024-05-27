@@ -32,6 +32,7 @@ filetype plugin indent on
 " Relative number
 function! SetRelNum()
   if &ft != "man"
+    set nu
     set relativenumber
   endif
 endfunc
@@ -48,6 +49,7 @@ set background=dark
 let g:everforeset_background = 'soft'
 colorscheme everforest
 let g:airline_theme = 'everforest'
+highlight LineNr ctermfg=grey ctermbg=238
 
 " Man
 runtime! ftplugin/man.vim
@@ -78,3 +80,7 @@ if has('gui_running')
   set guioptions -=T
   set guioptions -=r
 endif
+
+let g:markdown_folding = 1
+
+set hlsearch

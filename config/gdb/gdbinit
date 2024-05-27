@@ -1,0 +1,14 @@
+define hook-stop
+  refresh
+end
+
+# TUI settings
+tui enable
+set tui border-kind acs
+set tui border-mode bold-standout
+layout regs
+
+winheight regs 10
+winheight src 35
+
+refresh

@@ -49,6 +49,7 @@ export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority"
 export LESSHISTFILE="-"
 export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc.conf"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
+export PYTHONHISTFILE="$XDG_DATA_HOME/python/history"
 export XCURSOR_PATH="$XDG_DATA_HOME/icons"
 export VIMINIT='let $MYVIMRC="$XDG_CONFIG_HOME/vim/vimrc" | source $MYVIMRC'
 export SQLITE_HISTORY="$XDG_CACHE_HOME/sqlite/sqlite_history"
@@ -58,6 +59,13 @@ export RUSTUP_HOME="$XDG_CONFIG_HOME/rustup"
 export GRADLE_USER_HOME="$XDG_CONFIG_HOME/gradle"
 export GOPATH="$XDG_DATA_HOME/go"
 export GNUPGHOME="$XDG_DATA_HOME/gnupg"
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm/npm"
+export _JAVA_OPTIONS="-Djava.util.prefs.userRoot=\"$XDG_CONFIG_HOME\"java"
+export NOTMUCH_CONFIG="$XDG_CONFIG_HOME/notmuch/config"
+export W3M_DIR="$XDG_DATA_HOME/w3m"
+export RANDFILE="$XDG_DATA_HOME/openssl/.rnd"
+export MPLAYER_HOME="$XDG_CONFIG_HOME/mplayer"
 
 if [ ! -z "$WSLENV" ]
 then

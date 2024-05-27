@@ -1,5 +1,6 @@
 [alias]
 	st = status
+	sti = status --ignore-submodules
 	stu = status -uno
 	co = checkout
 	cob = checkout -b
@@ -51,3 +52,6 @@
 
 [status]
 	showStash = true
+
+[include]
+	path = ~/.config/git/config_sensitive.conf

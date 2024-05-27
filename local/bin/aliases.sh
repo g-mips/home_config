@@ -42,5 +42,10 @@ alias alert='notify-send --urgency=low -i \
 # Alias the tmux command to use the conf file found here
 alias tmux='tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf'
 
+# newsboat doesn't support including other files. So this is my method.
+alias newsboat='newsboat -C <(cat ${XDG_CONFIG_HOME}/newsboat/config ${XDG_CONFIG_HOME}/newsboat/config.d/*)'
+
+alias dosbox='dosbox -conf "${XDG_CONFIG_HOME}/dosbox/dosbox.conf'
+
 # Jump into the default session of the terminal multiplexer
 alias sess='tmux -2 attach || tmux -2'
