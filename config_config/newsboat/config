@@ -36,3 +36,5 @@ bind-key h quit
 color listfocus        color223 color236 bold
 color listfocus_unread color223 color236 bold
 color info             color235 color142 bold
+
+scrolloff 10

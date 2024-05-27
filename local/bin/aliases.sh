@@ -15,6 +15,8 @@ if [ -x /usr/bin/dircolors ]; then
         alias fgrep='fgrep --color=auto'
         alias egrepc='egrep --color=always'
         alias egrep='egrep --color=auto'
+
+        alias ip='ip -c'
 fi
 
 # some more ls aliases
