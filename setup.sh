@@ -58,6 +58,7 @@ hard_link_check () {
             MAKE_HL=1
         fi
     else
+        mkdir -p $(dirname ${HL_FILE})
         MAKE_HL=1
     fi
 
