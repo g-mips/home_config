@@ -14,14 +14,17 @@ start_agent () {
     #fi
 }
 
-# Source SSH settings, if applicable
-if [ -f "${SSH_ENV}" ]
+if [ ! -S "${SSH_AUTH_SOCK}" ]
 then
-     . "${SSH_ENV}" > /dev/null
-     ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent > /dev/null || {
-         killall -9 ssh-agent > /dev/null 2>&1
+    # Source SSH settings, if applicable
+    if [ -f "${SSH_ENV}" ]
+    then
+         . "${SSH_ENV}" > /dev/null
+         ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent > /dev/null || {
+             killall -9 ssh-agent > /dev/null 2>&1
+             start_agent;
+         }
+    else
          start_agent;
-     }
-else
-     start_agent;
+    fi
 fi

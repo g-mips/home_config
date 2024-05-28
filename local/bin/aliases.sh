@@ -49,3 +49,6 @@ alias dosbox='dosbox -conf "${XDG_CONFIG_HOME}/dosbox/dosbox.conf'
 
 # Jump into the default session of the terminal multiplexer
 alias sess='tmux -2 attach || tmux -2'
+
+vim --version | grep -q "+xterm_clipboard"
+[ $? -ne 0 ] && alias vim='which gvim > /dev/null 2>&1 && gvim -v || vim' || true

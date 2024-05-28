@@ -300,7 +300,14 @@ multiline_prompt () {
     : $((PS1L_LEN=PS1L_LEN + GIT_INFO_LEN))
 
     # Setup the second line
-    [ ! -z "$BASH" ] && local PS1_PRMPT="" || local PS1_PRMPT=" "
+    if [ ! -z "$BASH_VERSION" ]
+    then
+        MAJ_VERSION=$(echo $BASH_VERSION | cut -d'.' -f1)
+        MIN_VERSION=$(echo $BASH_VERSION | cut -d'.' -f2)
+        [ $MAJ_VERSION -ge 4 -a $MIN_VERSION -ge 3 ] && local PS1_PRMPT="" || local PS1_PRMPT=" "
+    else
+        local PS1_PRMPT=""
+    fi
     : $((i=0))
     while [ "$((i != SHLVL_INFO_LEN))" -ne 0 ]
     do
@@ -404,6 +411,8 @@ prompt () {
     then
         EXIT_COLOR=$RED
     fi
+
+    . $CACHE_FILE
 
     # Simple prompt takes priority over all
     if [ "$SIMPLE_PROMPT" != "no" ]
