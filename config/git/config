@@ -14,9 +14,12 @@
 	mff = merge --ff-only
 	ri = rebase -i
 	pur = pull --rebase
+	pns = pull --no-recurse-submodules
+	pnsr = pull --rebase --no-recurse-submodules
 	lob = log --branches --graph --oneline
 	loo = log --oneline --graph
 	dc = diff --cached
+	fp = fetch -p
 
 [core]
 	editor = /usr/bin/vim
