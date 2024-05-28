@@ -51,4 +51,4 @@ alias dosbox='dosbox -conf "${XDG_CONFIG_HOME}/dosbox/dosbox.conf'
 alias sess='tmux -2 attach || tmux -2'
 
 vim --version | grep -q "+xterm_clipboard"
-[ $? -ne 0 ] && alias vim='which gvim > /dev/null 2>&1 && gvim -v || vim' || true
+[ $? -ne 0 ] && which gvim > /dev/null 2>&1 && alias vim='gvim -v' || true
