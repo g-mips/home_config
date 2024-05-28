@@ -3,6 +3,7 @@
 # Configureation dirs
 mkdir -p ~/.config
 mkdir -p ~/.config/java
+mkdir -p ~/.config/esound
 
 # Cache dirs
 mkdir -p ~/.cache

@@ -66,6 +66,7 @@ export NOTMUCH_CONFIG="$XDG_CONFIG_HOME/notmuch/config"
 export W3M_DIR="$XDG_DATA_HOME/w3m"
 export RANDFILE="$XDG_DATA_HOME/openssl/.rnd"
 export MPLAYER_HOME="$XDG_CONFIG_HOME/mplayer"
+export ESD_AUTH_FILE="$XDG_CONFIG_HOME/esound/auth"
 
 if [ ! -z "$WSLENV" ]
 then
