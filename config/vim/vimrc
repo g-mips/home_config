@@ -56,21 +56,27 @@ runtime! ftplugin/man.vim
 
 set cursorline
 set showcmd
-set belloff=all
+if exists('belloff')
+  set belloff=all
+endif
 set ttyfast
 set incsearch
 
 set sessionoptions+=tabpages,globals
 
 " Web, Vim
-au FileType html,javascript,vim setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab smarttab
+au FileType html,javascript,vim,json setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab smarttab
 au BufNewFile,BufRead *.vue setfiletype html
 
 " C, C++, Shell
-au FileType c,cpp,sh setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab smarttab
+au FileType c,cpp setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab smarttab
+au FileType sh setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab smarttab autoindent
 
 " Golang
-au FileType go setlocal tabstop=8 shiftwidth=8 softtabstop=8 noexpandtab smarttab
+au FileType go setlocal tabstop=8 shiftwidth=8 softtabstop=8 noexpandtab smarttab autoindent
+
+" Python
+au FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab smarttab autoindent
 
 inoremap jj <ESC>
 
