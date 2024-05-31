@@ -25,9 +25,11 @@ tohex(){
 
 if [ $# -lt 1 ]
 then
+    OUTPUT=
     for i in $(seq 0 255); do
-        tohex ${i}
+        OUTPUT="${OUTPUT}\n$(tohex ${i})"
     done
+    echo -e "${OUTPUT}" | column
 else
     tohex $1
 fi
