@@ -1,10 +1,7 @@
 # Directories
 
-- `config` -- Contains all `XDG_CONFIG_HOME` files.
-- `home` -- Contains all dot files from the home directory that can't live in the XDG_CONFIG_HOME.
-- `local` -- Contains all `.local` files.
-- `extras` -- Contains all extra files that are needed by the configuration scripts in `scripts`.
-- `old` -- Contains all crusty unused files go here that I'm not willing to delete quite yet.
+- `home` -- Contains all the configuration files that will live under the home directory and beyond.
+- `scripts` -- Contains all the scripts that are to be run when setting up the home directory.
 
 # Process
 
