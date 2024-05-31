@@ -36,7 +36,7 @@ export HISTFILESIZE=2000
 export SSH_ENV="$HOME/.ssh/environment"
 
 # Setup default prompt (Changes if using prompt.sh file)
-export PS1="\$ "
+export PS1='\$ '
 
 # XDG Base Directory
 export XDG_DATA_HOME="$HOME/.local/share"
@@ -80,9 +80,3 @@ then
 
     xrdb ~/.config/xwindowsystem/.Xresources
 fi
-
-# Turn off CTRL-S and CTRL-Q. They are annoying and unneeded (in most cases).
-stty -ixon
-
-# Source in the extra files
-. ssh_agent.sh

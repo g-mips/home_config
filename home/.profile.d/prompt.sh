@@ -413,6 +413,7 @@ prompt () {
     fi
 
     . $CACHE_FILE
+    . ~/.profile.d/ud.sh
 
     # Simple prompt takes priority over all
     if [ "$SIMPLE_PROMPT" != "no" ]

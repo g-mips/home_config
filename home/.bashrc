@@ -22,6 +22,13 @@ if ! shopt -oq posix; then
   fi
 fi
 
-. ud.sh
-. aliases.sh
-. prompt.sh
+# Turn off CTRL-S and CTRL-Q. They are annoying and unneeded (in most cases).
+stty -ixon
+
+# Load profiles from ~/.profile.d
+if test -d ~/.profile.d/; then
+    for profile in ~/.profile.d/*.sh; do
+        test -r "$profile" && . "$profile"
+    done
+    unset profile
+fi

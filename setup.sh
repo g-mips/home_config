@@ -1,6 +1,22 @@
 #!/bin/sh
 
-DBG_PRINT=$([ "$1" = "-d" ] && printf "1" || printf "0")
+DBG_PRINT=0
+DRY_RUN=
+
+while getopts "dn" o; do
+    case "${o}" in
+        d)
+            DBG_PRINT=1
+            ;;
+        n)
+            DRY_RUN="echo -e \\tWould run: "
+            ;;
+        *)
+            usage
+            ;;
+    esac
+done
+shift $((OPTIND-1))
 
 CWD=$(pwd)
 
@@ -13,7 +29,7 @@ make_hard_link () {
     TARGET_FILE=$2
 
     printf "Hardlinking ${SOURCE_FILE} to ${TARGET_FILE}..\n"
-    ln ${SOURCE_FILE} ${TARGET_FILE}
+    $DRY_RUN ln ${SOURCE_FILE} ${TARGET_FILE}
 }
 
 inode_check () {
@@ -32,8 +48,8 @@ inode_check () {
 
 hard_link_check () {
     FILE_TO_CHECK=$1
-    HL_FILE="${HARD_LINK_DIR}/$FILE_TO_CHECK"
-    CACHE_FILE="${XDG_CACHE_HOME}/${CACHE_NAME}/$FILE_TO_CHECK"
+    HL_FILE="${HOME}/$FILE_TO_CHECK"
+    CACHE_FILE="${XDG_CACHE_HOME}/home_config/$FILE_TO_CHECK"
     MAKE_HL=0
 
     if [ -f "${HL_FILE}" ]
@@ -44,25 +60,25 @@ hard_link_check () {
         then
             printf "INodes for ${HL_FILE} and ${FILE_TO_CHECK} are not the same. Updating...\n"
             printf "Storing ${HL_FILE} in ${CACHE_FILE}...\n"
-            mkdir -p $(dirname ${CACHE_FILE})
+            $DRY_RUN mkdir -p $(dirname ${CACHE_FILE})
 
             # Move the file to get rid of in the config directory.
-            mv ${HL_FILE} ${CACHE_FILE}.current
+            $DRY_RUN mv ${HL_FILE} ${CACHE_FILE}.current
 
             # Copy the file to change its inode
-            cp ${CACHE_FILE}.current ${CACHE_FILE}
+            $DRY_RUN cp ${CACHE_FILE}.current ${CACHE_FILE}
 
             # Remove the "current" file in cache as it is unneeded.
-            rm ${CACHE_FILE}.current
+            $DRY_RUN rm ${CACHE_FILE}.current
 
             MAKE_HL=1
         fi
     else
-        mkdir -p $(dirname ${HL_FILE})
+        $DRY_RUN mkdir -p $(dirname ${HL_FILE})
         MAKE_HL=1
     fi
 
-    [ $MAKE_HL -eq 1 ] && make_hard_link $FILE_TO_CHECK $HL_FILE
+    [ $MAKE_HL -eq 1 ] && make_hard_link $FILE_TO_CHECK $HL_FILE || true
 }
 
 loop_directory () {
@@ -71,51 +87,35 @@ loop_directory () {
 
     local FILES=$(ls -1A $BASE_DIR)
 
+    printf "Configuring ${HOME}/${BASE_DIR}\n"
+
     for FILE in $FILES
     do
-        if [ -f "${BASE_DIR}/${FILE}" ]
+        TARGET="${BASE_DIR}/${FILE}"
+        if [ -f "${TARGET}" ]
         then
-            do_print "${BASE_DIR}/${FILE} is a file...\n"
+            do_print "${TARGET} is a file...\n"
 
-            hard_link_check ${BASE_DIR}/${FILE}
-        elif [ -d "${BASE_DIR}/${FILE}" ]
+            hard_link_check ${TARGET}
+        elif [ -d "${TARGET}" ]
         then
             if [ $IS_REC -eq 1 ]
             then
-                do_print "${BASE_DIR}/${FILE} is a directory. Diving deeper...\n"
-                loop_directory ${BASE_DIR}/${FILE}
+                do_print "${TARGET} is a directory. Diving deeper...\n"
+                loop_directory ${TARGET} 1
             fi
         else
-            printf "${BASE_DIR}/${FILE} is a not supported file type...\n"
+            printf "${TARGET} is a not supported file type...\n"
         fi
     done
 }
 
+# Evaluate all the scripts first
 for script in $(find ./scripts -type f -name "*.sh")
 do
     $script
 done
 
-# XDG_CONFIG_HOME
-printf "Configuring ${XDG_CONFIG_HOME}\n"
-HARD_LINK_DIR=${XDG_CONFIG_HOME}
-CACHE_NAME=config
-cd config
-loop_directory . 1
-cd ..
-
-# ~/.local
-printf "Configuring ~/.local\n"
-HARD_LINK_DIR=~/.local
-CACHE_NAME=local
-cd local
-loop_directory . 1
-cd ..
-
-# ~/
-printf "Configuring ~/\n"
-HARD_LINK_DIR=~/
-CACHE_NAME=home
 cd home
-loop_directory . 0
+loop_directory . 1
 cd ..
