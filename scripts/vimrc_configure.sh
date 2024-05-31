@@ -11,7 +11,7 @@ mkdir -p ~/.local/state/vim/backup
 mkdir -p ~/.local/state/vim/undo
 
 SETUP_PACKAGES='y'
-read -N 1 -p "Setup vim package manager and packages? (y|n) " SETUP_PACKAGES
+read -N 1 -p "$(printf "\t")Setup vim package manager and packages (requires internet)? (y|n) " SETUP_PACKAGES
 
 printf "\n"
 

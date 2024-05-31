@@ -1,16 +1,19 @@
 #!/bin/sh
 
-# Configureation dirs
+# Configuration dirs
+printf "\tMaking .config directories\n"
 mkdir -p ~/.config
 mkdir -p ~/.config/java
 mkdir -p ~/.config/esound
 
 # Cache dirs
+printf "\tMaking .cache directories\n"
 mkdir -p ~/.cache
 mkdir -p ~/.cache/sqlite
 mkdir -p ~/.cache/npm
 
 # .local dirs
+printf "\tMaking .local directories\n"
 mkdir -p ~/.local
 mkdir -p ~/.local/share
 mkdir -p ~/.local/state

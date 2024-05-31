@@ -7,22 +7,22 @@ mkdir -p $(dirname $GIT_SENSITIVE_CONF) > /dev/null 2>&1
 touch $GIT_SENSITIVE_CONF
 
 INCLUDE_USER_VALUES='y'
-[ -f "$GIT_SENSITIVE_CONF" ] && read -N 1 -p "Reconfigure git user values? (y|n) " INCLUDE_USER_VALUES \
-    || read -N 1 -ep "Include git user values options? (y|n) " INCLUDE_USER_VALUES
+[ -f "$GIT_SENSITIVE_CONF" ] && read -N 1 -p "$(printf "\t")Reconfigure git user values? (y|n) " INCLUDE_USER_VALUES \
+    || read -N 1 -ep "$(printf "\t")Include git user values options? (y|n) " INCLUDE_USER_VALUES
 
 printf "\n"
 
 if printf "%s" $INCLUDE_USER_VALUES | grep -iqF y
 then
-    printf "******** GIT CONFIGURATION ********\n"
-    printf "'user' configuration\n"
+    printf "\t******** GIT CONFIGURATION ********\n"
+    printf "\t'user' configuration\n"
 
-    read -p "Please enter 'email' value: " EMAIL
-    read -p "Please enter 'name' value: " NAME
+    read -p "$(printf "\t")Please enter 'email' value: " EMAIL
+    read -p "$(printf "\t")Please enter 'name' value: " NAME
 
-    printf "Writing 'user' configuration to 'configuration'\n"
-    printf "EMAIL -- $EMAIL\n"
-    printf "NAME -- $NAME\n"
+    printf "\tWriting 'user' configuration to 'configuration'\n"
+    printf "\tEMAIL -- $EMAIL\n"
+    printf "\tNAME -- $NAME\n"
 
     cat > $GIT_SENSITIVE_CONF << EOF
 [user]
