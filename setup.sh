@@ -32,6 +32,7 @@ while getopts "dnsh" o; do
             ;;
         h)
             usage
+            exit 0
             ;;
         *)
             usage

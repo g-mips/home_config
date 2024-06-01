@@ -5,6 +5,8 @@ printf "\tMaking .config directories\n"
 mkdir -p ~/.config
 mkdir -p ~/.config/java
 mkdir -p ~/.config/esound
+mkdir -p ~/.config/vim/pack/
+mkdir -p ~/.config/vim/pack/themes/start
 
 # Cache dirs
 printf "\tMaking .cache directories\n"

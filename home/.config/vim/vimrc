@@ -45,11 +45,17 @@ augroup numbertoogle
 augroup END
 
 " Theme
-set background=dark
-let g:everforeset_background = 'soft'
-colorscheme everforest
-let g:airline_theme = 'everforest'
-highlight LineNr ctermfg=grey ctermbg=238
+" set background=dark
+" let g:everforeset_background = 'soft'
+" colorscheme everforest
+" let g:airline_theme = 'everforest'
+" highlight LineNr ctermfg=grey ctermbg=238
+
+if v:version < 802
+    packadd! dracula
+endif
+syntax enable
+colorscheme dracula
 
 " Man
 runtime! ftplugin/man.vim

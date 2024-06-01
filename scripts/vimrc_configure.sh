@@ -35,4 +35,8 @@ then
     cp -f -R ~/.config/vim/bundle/everforest/autoload/* ~/.config/vim/autoload/.
     cp -f -R ~/.config/vim/bundle/everforest/colors/* ~/.config/vim/colors/.
     cp -f -R ~/.config/vim/bundle/everforest/doc/* ~/.config/vim/doc/.
+
+    mkdir -p ~/.config/vim/pack/themes/start
+    cd ~/.config/vim/pack/themes/start
+    git clone https://github.com/dracula/vim.git dracula
 fi
