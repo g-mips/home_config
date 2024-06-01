@@ -82,7 +82,7 @@ hard_link_check () {
 
         if [ $? -ne 0 ]
         then
-            printf "\tINodes for ${HL_FILE} and ${FILE_TO_CHECK} are not the same. Updating...\n"
+            do_print "INodes for ${HL_FILE} and ${FILE_TO_CHECK} are not the same. Updating...\n"
             do_print "Storing ${HL_FILE} in ${CACHE_FILE}...\n"
             $DRY_RUN mkdir -p $(dirname ${CACHE_FILE})
 
