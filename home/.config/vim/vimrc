@@ -53,9 +53,13 @@ augroup END
 
 if v:version < 802
     packadd! dracula
+    packadd! nord
+    packadd! srcery-vim
 endif
 syntax enable
-colorscheme dracula
+"colorscheme dracula
+"colorscheme nord
+colorscheme srcery
 
 " Man
 runtime! ftplugin/man.vim

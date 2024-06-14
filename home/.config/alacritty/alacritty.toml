@@ -1,28 +1,4 @@
-import = ["~/.config/alacritty/themes/dracula.toml"]
-
-#[colors.bright]
-#black = "#4b565c"
-#blue = "#7fbbb3"
-#cyan = "#83c092"
-#green = "#a7c080"
-#magenta = "#d699b6"
-#red = "#e67e80"
-#white = "#d3c6aa"
-#yellow = "#dbbc7f"
-
-#[colors.normal]
-#black = "#4b565c"
-#blue = "#7fbbb3"
-#cyan = "#83c092"
-#green = "#a7c080"
-#magenta = "#d699b6"
-#red = "#e67e80"
-#white = "#d3c6aa"
-#yellow = "#dbbc7f"
-
-#[colors.primary]
-#foreground = "#d3c6aa"
-#background = "#262626"
+import = ["~/.config/alacritty/themes/srcery.toml"]
 
 [cursor.style]
 blinking = "On"
@@ -58,4 +34,3 @@ y = -1
 [window.padding]
 x = 0
 y = 0
-
