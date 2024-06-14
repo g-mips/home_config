@@ -8,19 +8,23 @@ SINGLE_RUN_MODULES="$SINGLE_RUN_MODULES ${MOD_NAME}"
 volume_buttons () {
     case "$1" in
         "1")
-            printf "VOLUME\n" > /tmp/lemon_fifo
+            printf "VOLUME\n" > ${FIFO}
             ;;
         "2")
             ;;
         "3")
             ;;
         "4")
-            pamixer --allow-boost -i 2; printf "VOLUME\n" > /tmp/lemon_fifo
+            pamixer --allow-boost -i 2; printf "VOLUME\n" > ${FIFO}
             ;;
         "5")
-            pamixer --allow-boost -d 2; printf "VOLUME\n" > /tmp/lemon_fifo
+            pamixer --allow-boost -d 2; printf "VOLUME\n" > ${FIFO}
             ;;
     esac
+}
+
+setup_volume () {
+    run_volume $@
 }
 
 run_volume () {
@@ -47,7 +51,7 @@ run_volume () {
     then
         volume_INFO="${volume_INFO} $(printf "$VOL%%")%"
 
-        { sleep 2; printf "volume SIMPLE\n" > /tmp/lemon_fifo; PREV_PID= ; } &
+        { sleep 2; printf "volume SIMPLE\n" > ${FIFO}; PREV_PID= ; } &
         PREV_PID=$!
     fi
 

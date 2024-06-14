@@ -16,8 +16,8 @@ data_buttons () {
     case "$1" in
         "1")
             touch $MORE_DATA_INFO_FILE
-            run_data > /tmp/lemon_fifo
-            { sleep 8; rm -f $MORE_DATA_INFO_FILE; run_data > /tmp/lemon_fifo; } &
+            run_data > ${FIFO}
+            { sleep 8; rm -f $MORE_DATA_INFO_FILE; run_data > ${FIFO}; } &
             ;;
         "2")
             if [ $NUM_DEVS -gt 0 ]
@@ -33,6 +33,10 @@ data_buttons () {
             ;;
         "3") notify-send "Device Sizes" "\n$(df -h --output=source,size,used,avail,pcent,target $(lsblk  -lpn | awk '{ if ($2 != "") { print $1; } }'))" ;;
     esac
+}
+
+setup_data () {
+    run_data
 }
 
 run_data () {

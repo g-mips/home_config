@@ -14,10 +14,14 @@ temperature_buttons () {
     case "$1" in
         "1")
             touch $MORE_TEMP_INFO_FILE
-            run_temperature > /tmp/lemon_fifo
-            { sleep 8; rm -f $MORE_TEMP_INFO_FILE; run_temperature > /tmp/lemon_fifo; } &
+            run_temperature > ${FIFO}
+            { sleep 8; rm -f $MORE_TEMP_INFO_FILE; run_temperature > ${FIFO}; } &
             ;;
     esac
+}
+
+setup_temperature () {
+    run_temperature
 }
 
 run_temperature () {

@@ -24,12 +24,16 @@ battery_buttons () {
             printf "%s " "${STATUS} ${CAP}%" > $MORE_BAT_INFO_FILE
 
             # Update the bar
-            run_battery > /tmp/lemon_fifo
+            run_battery > $FIFO
 
             # Set a timeout to clear the extra information
-            { sleep 3; rm -f $MORE_BAT_INFO_FILE; run_battery > /tmp/lemon_fifo; } &
+            { sleep 3; rm -f $MORE_BAT_INFO_FILE; run_battery > ${FIFO}; } &
             ;;
     esac
+}
+
+setup_battery () {
+    run_battery
 }
 
 run_battery () {

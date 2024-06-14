@@ -5,6 +5,10 @@ MOD_NAME="internet"
 INTERVAL_MODULES="$INTERVAL_MODULES ${MOD_NAME}:1.4"
 MODULES_ORDER="$MODULES_ORDER 2.1:${MOD_NAME}"
 
+setup_internet () {
+    run_internet
+}
+
 run_internet () {
     WIFI=/sys/class/net/w*
     ETHER=/sys/class/net/e*

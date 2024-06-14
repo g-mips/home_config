@@ -17,13 +17,17 @@ get_date_buttons () {
     case "$1" in
         "1")
             touch $MORE_DATE_INFO_FILE
-            run_get_date > /tmp/lemon_fifo
-            { sleep 6; rm -f $MORE_DATE_INFO_FILE; run_get_date > /tmp/lemon_fifo; } &
+            run_get_date > ${FIFO}
+            { sleep 6; rm -f $MORE_DATE_INFO_FILE; run_get_date > ${FIFO}; } &
             ;;
         "2")
             notify-send -t 15000 "Calendar" "$(cal)"
             ;;
     esac
+}
+
+setup_get_date () {
+    run_get_date
 }
 
 run_get_date () {

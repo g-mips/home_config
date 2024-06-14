@@ -15,13 +15,17 @@ cpu_buttons () {
     case "$1" in
         "1")
             touch $MORE_CPU_INFO_FILE
-            run_cpu > /tmp/lemon_fifo
-            { sleep 8; rm -f $MORE_CPU_INFO_FILE; run_cpu > /tmp/lemon_fifo; } &
+            run_cpu > ${FIFO}
+            { sleep 8; rm -f $MORE_CPU_INFO_FILE; run_cpu > ${FIFO}; } &
             ;;
         "2")
             alacritty --class "Alacritty,float" --command top -o "%CPU" &
             ;;
     esac
+}
+
+setup_cpu () {
+    run_cpu
 }
 
 run_cpu () {

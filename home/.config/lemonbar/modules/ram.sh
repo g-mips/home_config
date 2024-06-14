@@ -14,13 +14,17 @@ ram_buttons () {
     case "$1" in
         "1")
             touch $MORE_RAM_INFO_FILE
-            run_ram > /tmp/lemon_fifo
-            { sleep 8; rm -f $MORE_RAM_INFO_FILE; run_ram > /tmp/lemon_fifo; } &
+            run_ram > ${FIFO}
+            { sleep 8; rm -f $MORE_RAM_INFO_FILE; run_ram > ${FIFO}; } &
             ;;
         "2")
             alacritty --class "Alacritty,float" --command top -o "%MEM"
             ;;
     esac
+}
+
+setup_ram () {
+    run_ram
 }
 
 run_ram () {
