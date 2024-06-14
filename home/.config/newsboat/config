@@ -1,6 +1,6 @@
 browser "/usr/sbin/w3m %u"
 macro m set browser "/usr/sbin/mpv %u"; open-in-browser ; set browser "/usr/bin/w3m %u"
-macro f set browser "/usr/bin/firefox %u"; open-in-browser ; set browser "/usr/bin/w3m %u"
+macro f set browser "/usr/bin/librewolf %u"; open-in-browser ; set browser "/usr/bin/w3m %u"
 
 mark-as-read-on-hover yes
 

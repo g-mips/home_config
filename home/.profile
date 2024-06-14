@@ -67,6 +67,7 @@ export W3M_DIR="$XDG_DATA_HOME/w3m"
 export RANDFILE="$XDG_DATA_HOME/openssl/.rnd"
 export MPLAYER_HOME="$XDG_CONFIG_HOME/mplayer"
 export ESD_AUTH_FILE="$XDG_CONFIG_HOME/esound/auth"
+export TMUX_TMPDIR="$XDG_RUNTIME_DIR/tmux"
 
 if [ ! -z "$WSLENV" ]
 then

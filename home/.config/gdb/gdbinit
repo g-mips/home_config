@@ -10,5 +10,6 @@ layout regs
 
 winheight regs 10
 winheight src 35
+winheight cmd 12
 
 refresh
