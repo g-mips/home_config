@@ -100,3 +100,5 @@ endif
 let g:markdown_folding = 1
 
 set hlsearch
+set mouse=n
+set ttymouse=xterm2
