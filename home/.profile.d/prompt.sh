@@ -375,8 +375,9 @@ singleline_prompt () {
 
 simple_prompt () {
     # Setup the PS1 var
+    [ -z "$SSH_CONNECTION" ] && HOSTNAME_PROMPT= || HOSTNAME_PROMPT="${PURPLE}${HOSTNAME_COMMAND}${FULL_RESET} "
     [ "$SIMPLE_PROMPT" = "yes" ] && PS1=" $EXIT_COLOR\$$FULL_RESET "
-    [ "$SIMPLE_PROMPT" = "path" ] && PS1=" $CYAN$([ "$SHOW_FULL_PATH" = "yes" ] && \
+    [ "$SIMPLE_PROMPT" = "path" ] && PS1=" ${HOSTNAME_PROMPT}$CYAN$([ "$SHOW_FULL_PATH" = "yes" ] && \
         printf "%s" "$FULL_PATH_COMMAND" || printf "%s" "$BASENAME_COMMAND")$FULL_RESET $EXIT_COLOR\$$FULL_RESET "
 
     if [ "$R_ALIGNED" = "yes" ]
@@ -425,6 +426,8 @@ prompt () {
     else
         singleline_prompt
     fi
+
+    PS1="${EXTRA_PREV_PS1}${PS1}"
 }
 
 # Setup the prompt based on the shell we are using
