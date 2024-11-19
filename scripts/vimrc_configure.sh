@@ -23,6 +23,7 @@ then
     # clone in the bundles
     rm -rf ~/.config/vim/bundle/base16-vim
     rm -rf ~/.config/vim/bundle/vim-airline
+    rm -rf ~/.config/vim/bundle/vim-markdown
 
     git clone https://github.com/chriskempson/base16-vim.git ~/.config/vim/bundle/base16-vim
     git clone https://github.com/vim-airline/vim-airline.git ~/.config/vim/bundle/vim-airline
@@ -30,5 +31,8 @@ then
 
     mkdir -p ~/.config/vim/pack/themes/start
     cd ~/.config/vim/pack/themes/start
+
+    rm -rf ~/.config/vim/pack/themes/start/srcery-vim
+
     git clone https://github.com/srcery-colors/srcery-vim.git
 fi
