@@ -16,14 +16,16 @@
 	pur = pull --rebase
 	pns = pull --no-recurse-submodules
 	pnsr = pull --rebase --no-recurse-submodules
+	loa = log --branches --graph --oneline --decorate --all
 	lob = log --branches --graph --oneline
 	loo = log --oneline --graph
 	dc = diff --cached
 	fp = fetch -p
+	sp = stash pop
 
 [core]
-	editor = /usr/bin/vim
-	pager = /usr/bin/less -+$LESS -R
+	editor = vim
+	pager = less -+$LESS -R
 	whitespace = blank-at-eol,space-before-tab,blank-at-eof,tabwidth=8
 	safecrlf = warn
 
@@ -100,6 +102,9 @@
 	unmerged = magenta bold reverse
 	untracked = red bold
 	updated = green bold
+
+[submodule]
+	fetchJobs = 12
 
 [include]
 	path = ~/.config/git/config_sensitive.conf

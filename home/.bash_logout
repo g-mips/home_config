@@ -1,5 +1,4 @@
 #
 # ~/.bash_logout
 #
-clear
-reset
+timeout 1 tput reset
