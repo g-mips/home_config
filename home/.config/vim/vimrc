@@ -103,6 +103,16 @@ set hlsearch
 set mouse=n
 set ttymouse=xterm2
 
+function! <SID>StripTrailingWhitespaces()
+  if !&binary && &filetype != 'diff'
+    let l:save = winsaveview()
+    keeppatterns %s/\s\+$//e
+    call winrestview(l:save)
+  endif
+endfun
+
+autocmd FileType c,cpp,java,php,ruby,python autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+
 let mapleader = "\\"
 
 nmap <Leader>dl :diffget LO<CR>
