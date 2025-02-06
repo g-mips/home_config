@@ -102,3 +102,15 @@ let g:markdown_folding = 1
 set hlsearch
 set mouse=n
 set ttymouse=xterm2
+
+let mapleader = "\\"
+
+nmap <Leader>dl :diffget LO<CR>
+nmap <Leader>db :diffget BA<CR>
+nmap <Leader>dr :diffget RE<CR>
+
+" Map next unresolved conflict to ]C
+nnoremap ]C /<<<<<<< <CR>
+
+" Map previous unresolved conflict to [C
+nnoremap [C ?<<<<<<< <CR>
