@@ -106,5 +106,8 @@
 [submodule]
 	fetchJobs = 12
 
+[init]
+	defaultBranch = master
+
 [include]
 	path = ~/.config/git/config_sensitive.conf
