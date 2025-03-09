@@ -33,4 +33,4 @@ mkdir -p ~/.local/share/w3m
 mkdir -p ~/.local/share/openssl
 
 # Runtime dirs
-mkdir p ${XDG_RUNTIME_DIR}/tmux
+mkdir -p ${XDG_RUNTIME_DIR}/tmux
