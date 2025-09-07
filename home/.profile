@@ -70,15 +70,41 @@ export MPLAYER_HOME="$XDG_CONFIG_HOME/mplayer"
 export ESD_AUTH_FILE="$XDG_CONFIG_HOME/esound/auth"
 export TMUX_TMPDIR="$XDG_RUNTIME_DIR/tmux"
 
+# Are we in a WSL environment?
 if [ ! -z "$WSLENV" ]
 then
-    if [ $(grep -oE 'gcc version ([0-9]+)' /proc/version | awk '{print $3}') -gt 5 ]
+    uname -a | grep -q WSL2
+    if [ $? -eq 0 ]
     then
-        export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+        #export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
         export PULSE_SERVER=tcp:$(grep nameserver /etc/resolv.conf | awk '{print $2}');
+
+        # IP addresses for currently running Linux and Windows systems
+        LINUX_IP=$(ip addr | awk '/inet / && !/127.0.0.1/ {split($2,a,"/"); print a[1]}')
+        WINDOWS_IP=$(ip route | awk '/^default/ {print $3}')
+
+        # IP addresses in current windows defender firewall rule
+        # netsh outputs line of "^(Local|Remote)IP:\s+IPADDR/32$" so get second field of
+        # 'IPADDR/32' and split it on '/' then just print IPADDR
+        FIREWALL_WINDOWS_IP=$(netsh.exe advfirewall firewall show rule name=X11-Forwarding | awk '/^LocalIP/ {split($2,a,"/");print a[1]}')
+        FIREWALL_LINUX_IP=$(netsh.exe advfirewall firewall show rule name=X11-Forwarding | awk '/^RemoteIP/ {split($2,a,"/");print a[1]}')
+
+        # Update firewall rule if firewall rules IPs don't match actual ones
+        if [ "$FIREWALL_LINUX_IP" != "$LINUX_IP" ] || [ "$WINDOWS_IP" != "$FIREWALL_WINDOWS_IP" ]; then
+                powershell.exe -Command "Start-Process netsh.exe -ArgumentList \"advfirewall firewall set rule name=X11-Forwarding new localip=$WINDOWS_IP remoteip=$LINUX_IP \" -Verb RunAs"
+        fi
+
+        # Appropriately set DISPLAY to Windows X11 server
+        DISPLAY="$WINDOWS_IP:0"
+
+        # Tell X11 programs to render on Windows, not linux, side
+        # docs: https://docs.mesa3d.org/envvars.html
+        LIBGL_ALWAYS_INDIRECT=1
+
+        export DISPLAY LIBGL_ALWAYS_INDIRECT
     else
         export DISPLAY=:0
     fi
 
-    xrdb ~/.config/xwindowsystem/.Xresources
+    xrdb ~/.config/xwindowsystem/Xresources
 fi
