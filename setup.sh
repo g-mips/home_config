@@ -73,7 +73,7 @@ inode_check () {
 hard_link_check () {
     FILE_TO_CHECK=$1
     HL_FILE="${HOME}/$FILE_TO_CHECK"
-    CACHE_FILE="${XDG_CACHE_HOME}/home_config/$FILE_TO_CHECK"
+    CACHE_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/home_config/$FILE_TO_CHECK"
     MAKE_HL=0
 
     if [ -f "${HL_FILE}" ]
