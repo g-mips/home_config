@@ -47,4 +47,5 @@ then
     git clone https://github.com/srcery-colors/srcery-vim.git
     git clone https://github.com/NLKNguyen/papercolor-theme.git
     git clone https://github.com/dracula/vim.git
+    git clone https://github.com/vim-airline/vim-airline-themes.git
 fi
