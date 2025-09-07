@@ -20,9 +20,10 @@ set undodir=$XDG_STATE_HOME/vim/undo,~/,/tmp
 set viminfo+=n$XDG_CACHE_HOME/vim/viminfo
 set runtimepath+=$XDG_CONFIG_HOME/vim,$XDG_CONFIG_HOME/vim/after,$VIM,$VIMRUNTIME
 let $MYVIMRC="$XDG_CONFIG_HOME/vim/vimrc"
+set packpath+=$XDG_CONFIG_HOME/vim
 
 " Plugin management
-execute pathogen#infect()
+" execute pathogen#infect()
 
 let g:netrw_home=$XDG_CACHE_HOME.'/vim'
 
@@ -59,7 +60,12 @@ endif
 syntax enable
 "colorscheme dracula
 "colorscheme nord
-colorscheme srcery
+"colorscheme srcery
+set background=dark
+colorscheme PaperColor
+let g:airline_theme='papercolor'
+
+"hi Normal guibg=NONE ctermbg=NONE
 
 " Man
 runtime! ftplugin/man.vim
@@ -124,3 +130,8 @@ nnoremap ]C /<<<<<<< <CR>
 
 " Map previous unresolved conflict to [C
 nnoremap [C ?<<<<<<< <CR>
+
+" Vim Wiki
+let g:vimwiki_list = [{ 'syntax': 'markdown',
+                      \ 'ext': 'md',
+                      \ 'path': '~/files/notes' }]
