@@ -107,4 +107,7 @@ then
     fi
 
     xrdb ~/.config/xwindowsystem/Xresources
+
+    # Other WSL notes:
+    # - Install font for Windows Terminal to use: winget install --id=DEVCOM.JetBrainsMonoNerdFont -e
 fi
