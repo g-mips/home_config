@@ -82,6 +82,17 @@ hard_link_check () {
 
         if [ $? -ne 0 ]
         then
+            diff -u ${FILE_TO_CHECK} ${HL_FILE}
+            if [ $? -ne 0 ]
+            then
+                $DRY_RUN read -p "Would you like to manually deal with these differences first? (y|n) " DEAL_WITH_IT
+
+                if [ "$DEAL_WITH_IT" != "n" ]
+                then
+                    $DRY_RUN exit 1
+                fi
+            fi
+
             do_print "INodes for ${HL_FILE} and ${FILE_TO_CHECK} are not the same. Updating...\n"
             do_print "Storing ${HL_FILE} in ${CACHE_FILE}...\n"
             $DRY_RUN mkdir -p $(dirname ${CACHE_FILE})
