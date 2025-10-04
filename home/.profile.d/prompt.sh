@@ -331,9 +331,9 @@ prompt () {
             if dir_is_git_repo
             then
                 __TRUE_PROMPT__+="(${GREEN}$( \
-                    timeout 2 git rev-parse --abbrev-ref HEAD)${FG_RESET})"
+                    timeout 2 git rev-parse --abbrev-ref HEAD)${FG_RESET}) "
                 [ -n "$(timeout 2 git status -uno --short 2> /dev/null)" ] && \
-                    __TRUE_PROMPT__+=" ${RED}*${FG_RESET} "
+                    __TRUE_PROMPT__+="${RED}*${FG_RESET} "
             fi
         fi
 
