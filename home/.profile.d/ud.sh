@@ -18,7 +18,14 @@ then
             if [ -z "$REAL_SSH_CONNECTION" ]
             then
                 unset SSH_CONNECTION
-                [ -f "${SSH_ENV}_$(hostname)" ] && source "${SSH_ENV}_$(hostname)" > /dev/null
+
+                HOSTNAME_CMD=
+                command -v hostname > /dev/null 2>&1 && HOSTNAME_CMD="hostname"
+                [ -z "$HOSTNAME_CMD" ] && command -v hostnamectl > /dev/null 2>&1 && HOSTNAME_CMD="hostnamectl hostname"
+
+                [ -f "${SSH_ENV}_$(${HOSTNAME_CMD})" ] && source "${SSH_ENV}_$(hostname)" > /dev/null
+                unset HOSTNAME_CMD
+
                 start_agent 0
             else
                 export SSH_CONNECTION=$REAL_SSH_CONNECTION

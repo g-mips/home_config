@@ -15,6 +15,10 @@ pid_check () {
 }
 
 enviornment_check () {
+    local HOSTNAME_CMD=
+    command -v hostname > /dev/null 2>&1 && HOSTNAME_CMD="hostname"
+    [ -z "$HOSTNAME_CMD" ] && command -v hostnamectl > /dev/null 2>&1 && HOSTNAME_CMD="hostnamectl hostname"
+
     # First let's check to see if our SSH environment file exists. Side note:
     # We are saving the environment with the hostname appended on because
     # we could be saving the file into a shared place across machines (like
@@ -24,9 +28,9 @@ enviornment_check () {
     # If the file does exist, let's recheck the SSH_AUTH_SOCK and then do our
     # PID check. If the file doesn't exist or the socket or PID check fails for
     # some reason, then we will need to just start the agent.
-    if [ -f "${SSH_ENV}_$(hostname)" ]
+    if [ -f "${SSH_ENV}_$($HOSTNAME_CMD)" ]
     then
-        source "${SSH_ENV}_$(hostname)" > /dev/null
+        source "${SSH_ENV}_$($HOSTNAME_CMD)" > /dev/null
 
         # We might still not have a valid socket at this point.
         if [ ! -S "$SSH_AUTH_SOCK" ]
@@ -48,6 +52,10 @@ enviornment_check () {
 }
 
 start_agent () {
+    local HOSTNAME_CMD=
+    command -v hostname > /dev/null 2>&1 && HOSTNAME_CMD="hostname"
+    [ -z "$HOSTNAME_CMD" ] && command -v hostnamectl > /dev/null 2>&1 && HOSTNAME_CMD="hostnamectl hostname"
+
     START_AGENT=$1
     if [ "$START_AGENT" != "1" ]
     then
@@ -97,11 +105,11 @@ start_agent () {
         [ ! -z "$SSH_AGENT_PIDS" ] && kill -9 $SSH_AGENT_PIDS
 
         # Now let's start up a new ssh-agent and save off the environment
-        /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}_$(hostname)"
-        chmod 600 "${SSH_ENV}_$(hostname)"
+        /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}_$($HOSTNAME_CMD)"
+        chmod 600 "${SSH_ENV}_$($HOSTNAME_CMD)"
 
         # Load in our new settings
-        . "${SSH_ENV}_$(hostname)" > /dev/null
+        . "${SSH_ENV}_$($HOSTNAME_CMD)" > /dev/null
     fi
 }
 

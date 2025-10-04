@@ -34,12 +34,16 @@
 # - bind
 ###############################################################################
 
+HOSTNAME_CMD=
+command -v hostname > /dev/null 2>&1 && HOSTNAME_CMD="hostname -s"
+[ -z "$HOSTNAME_CMD" ] && command -v hostnamectl > /dev/null 2>&1 && HOSTNAME_CMD="hostnamectl hostname"
+
 # Determine if we support color
 NUM_COLORS=$(tput colors 2> /dev/null)
 [ $? -eq 0 -a $NUM_COLORS -gt 2 ] && COLOR_PROMPT=yes
 
 # Make sure we have HOSTNAME and USER set
-[ -z "$HOSTNAME" ] && HOSTNAME=$(hostname -s)
+[ -z "$HOSTNAME" ] && HOSTNAME=$(${HOSTNAME_CMD})
 [ -z "$USER" ] && USER=$(whoami)
 
 # Setup cache file (TODO: Change location [used by ZSH as well])
@@ -359,6 +363,7 @@ prompt () {
 
 unset NUM_COLORS
 unset COLOR_PROMPT
+unset HOSTNAME_CMD
 
 # Return true
 true
