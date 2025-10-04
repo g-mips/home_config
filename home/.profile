@@ -13,7 +13,7 @@ export VISUAL='/usr/bin/vim'
 export ALTERNATE_EDITOR='/usr/bin/vi'
 
 # Setup browser
-export BROWSER='/usr/bin/librewolf:/usr/bin/firefox'
+export BROWSER="$(command -v zen-browser)"
 
 # Setup pager
 export PAGER='/usr/bin/less'
