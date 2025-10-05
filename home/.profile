@@ -69,6 +69,8 @@ export RANDFILE="$XDG_DATA_HOME/openssl/.rnd"
 export MPLAYER_HOME="$XDG_CONFIG_HOME/mplayer"
 export ESD_AUTH_FILE="$XDG_CONFIG_HOME/esound/auth"
 export TMUX_TMPDIR="$XDG_RUNTIME_DIR/tmux"
+export PASSWORD_STORE_DIR="$XDG_CONFIG_HOME/password-store"
+
 
 # Are we in a WSL environment?
 if [ ! -z "$WSLENV" ]
