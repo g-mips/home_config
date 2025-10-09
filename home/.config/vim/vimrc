@@ -65,7 +65,10 @@ set background=dark
 colorscheme PaperColor
 let g:airline_theme='papercolor'
 
-"hi Normal guibg=NONE ctermbg=NONE
+" In term mode, make the background be the same color as the terminal
+highlight Normal ctermbg=NONE
+highlight NonText ctermbg=NONE
+highlight LineNr ctermbg=NONE
 
 " Man
 runtime! ftplugin/man.vim
