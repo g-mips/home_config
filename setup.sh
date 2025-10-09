@@ -10,18 +10,22 @@ RED="${FOREGROUND_CODE}196m"
 GREEN="${FOREGROUND_CODE}46m"
 BLUE="${FOREGROUND_CODE}33m"
 RESET="${ANSI_CODE_START}0m"
+DIRECTORY=.
+FILE=
 
 usage () {
     printf "Usage: $0 [-hnsd]\n"
-    printf "  -h -- Run this help menu.\n"
-    printf "  -n -- Dry run.\n"
-    printf "  -s -- Skip running the scripts directory.\n"
-    printf "  -d -- Print out the debug print statements.\n"
+    printf "  -h      -- Run this help menu.\n"
+    printf "  -n      -- Dry run.\n"
+    printf "  -s      -- Skip running the scripts directory.\n"
+    printf "  -l      -- Print out the debug print statements.\n"
+    printf "  -d dir  -- Start at this directory instead.\n"
+    printf "  -f file -- Only do this file.\n"
 }
 
-while getopts "dnsh" o; do
+while getopts "lnsd:f:h" o; do
     case "${o}" in
-        d)
+        l)
             DBG_PRINT=1
             ;;
         n)
@@ -30,6 +34,12 @@ while getopts "dnsh" o; do
         s)
             SKIP_SCRIPTS=1
             ;;
+        d)
+            DIRECTORY=${OPTARG}
+            ;;
+        f)
+            FILE=${OPTARG}
+        ;;
         h)
             usage
             exit 0
@@ -75,6 +85,8 @@ hard_link_check () {
     HL_FILE="${HOME}/$FILE_TO_CHECK"
     CACHE_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/home_config/$FILE_TO_CHECK"
     MAKE_HL=0
+
+    do_print "Doing a hardlink check against ${HL_FILE}\n"
 
     if [ -f "${HL_FILE}" ]
     then
@@ -139,6 +151,16 @@ loop_directory () {
     done
 }
 
+do_file () {
+    local FILE=$1
+
+    if [ -f "$FILE" ]
+    then
+        do_print "${FILE} is a file...\n"
+    hard_link_check $FILE
+    fi
+}
+
 # Evaluate all the scripts first
 [ $SKIP_SCRIPTS -eq 0 ] && \
     { printf "${GREEN}***** Running scripts *****${RESET}\n" && \
@@ -149,4 +171,18 @@ loop_directory () {
       done; printf "\n"; } || true
 
 # Go into the home directory begin the hard link checking
-printf "${GREEN}***** Setting up user files *****${RESET}\n" && cd home && loop_directory .; cd ..
+if [ -z "$FILE" ]
+then
+    [ "$DIRECTORY" != "." ] && FULL_DIR_PATH=$(readlink -f $DIRECTORY)
+    cd home
+    [ "$DIRECTORY" != "." ] && DIRECTORY="${FULL_DIR_PATH/#$PWD\//}"
+    printf "${GREEN}***** Setting up user files *****${RESET}\n"
+    loop_directory $DIRECTORY
+    cd ..
+else
+    FULL_FILE_PATH=$(readlink -f $FILE)
+    cd home
+    FILE="${FULL_FILE_PATH/#$PWD\//}"
+    printf "${GREEN}***** Setting up ${FILE} *****${RESET}\n" && do_file $FILE
+    cd ..
+fi
