@@ -13,7 +13,9 @@ export VISUAL='/usr/bin/vim'
 export ALTERNATE_EDITOR='/usr/bin/vi'
 
 # Setup browser
-export BROWSER="$(command -v zen-browser)"
+BROWSER="$(command -v zen-browser)"
+[ -z "$BROWSER" ] && BROWSER="$(command -v firefox)"
+export BROWSER
 
 # Setup pager
 export PAGER='/usr/bin/less'
@@ -51,7 +53,7 @@ export LESSHISTFILE="-"
 export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc.conf"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
 export PYTHONHISTFILE="$XDG_DATA_HOME/python/history"
-export XCURSOR_PATH="$XDG_DATA_HOME/icons"
+export XCURSOR_PATH="$XDG_DATA_HOME/icons:/usr/share/icons"
 export VIMINIT='let $MYVIMRC="$XDG_CONFIG_HOME/vim/vimrc" | source $MYVIMRC'
 export SQLITE_HISTORY="$XDG_CACHE_HOME/sqlite/sqlite_history"
 export WINEPREFIX="$XDG_CONFIG_HOME/wine/default"
@@ -70,7 +72,7 @@ export MPLAYER_HOME="$XDG_CONFIG_HOME/mplayer"
 export ESD_AUTH_FILE="$XDG_CONFIG_HOME/esound/auth"
 export TMUX_TMPDIR="$XDG_RUNTIME_DIR/tmux"
 export PASSWORD_STORE_DIR="$XDG_CONFIG_HOME/password-store"
-
+export QT_QPA_PLATFORMTHEME="qt5ct"
 
 # Are we in a WSL environment?
 if [ ! -z "$WSLENV" ]
