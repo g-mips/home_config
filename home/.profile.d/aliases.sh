@@ -55,3 +55,5 @@ then
     vim --version | grep -q "+xterm_clipboard"
     [ $? -ne 0 ] && which gvim > /dev/null 2>&1 && alias vim='gvim -v' || true
 fi
+
+alias vsess='vim -S ~/.cache/vim/session.vim'
