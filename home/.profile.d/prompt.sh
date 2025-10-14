@@ -39,8 +39,21 @@ command -v hostname > /dev/null 2>&1 && HOSTNAME_CMD="hostname -s"
 [ -z "$HOSTNAME_CMD" ] && command -v hostnamectl > /dev/null 2>&1 && HOSTNAME_CMD="hostnamectl hostname"
 
 # Determine if we support color
-NUM_COLORS=$(tput colors 2> /dev/null)
-[ $? -eq 0 -a $NUM_COLORS -gt 2 ] && COLOR_PROMPT=yes
+if command -v tput > /dev/null 2>&1
+then
+    NUM_COLORS=$(tput colors 2> /dev/null)
+    [ $? -eq 0 -a $NUM_COLORS -gt 2 ] && COLOR_PROMPT=yes
+    unset NUM_COLORS
+else
+    case "$TERM" in
+        *color*)
+            COLOR_PROMPT=yes
+            ;;
+        *)
+            [ "$COLORTERM" = "truecolor" -o "$COLORTERM" = "yes" ] && COLOR_PROMPT=yes
+            ;;
+    esac
+fi
 
 # Make sure we have HOSTNAME and USER set
 [ -z "$HOSTNAME" ] && HOSTNAME=$(${HOSTNAME_CMD})
@@ -199,6 +212,7 @@ then
     GREEN_BG="$BASH_BEG_NON_PRINT\033[0;42;30m$BASH_END_NON_PRINT"
     FULL_BG="$BASH_BEG_NON_PRINT\033[48;5;11m$BASH_END_NON_PRINT"
 fi
+unset COLOR_PROMPT
 
 dir_is_git_repo () {
     git rev-parse --is-inside-work-tree > /dev/null 2>&1
@@ -358,7 +372,7 @@ prompt () {
 # Setup the prompt based on the shell we are using
 [ -z "$BASH" -a -z "$ZSH_VERSION" ] && \
     PS1="$(printf "$PURPLE$USER$FULL_RESET@$YELLOW$HOSTNAME$FULL_RESET $ ")"
-[ ! -z "$BASH" ] && PROMPT_COMMAND='prompt'
+[ ! -z "$BASH" ] && PROMPT_COMMAND="${PROMPT_COMMAND}$([ -n "$PROMPT_COMMAND" -a "${PROMPT_COMMAND: -1:1}" != ";" ] && printf ";")prompt;"
 [ ! -z "$ZSH_VERSION" ] && precmd () { prompt; }
 
 unset NUM_COLORS
