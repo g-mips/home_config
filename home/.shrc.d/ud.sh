@@ -25,7 +25,7 @@ then
                 command -v hostname > /dev/null 2>&1 && HOSTNAME_CMD="hostname"
                 [ -z "$HOSTNAME_CMD" ] && command -v hostnamectl > /dev/null 2>&1 && HOSTNAME_CMD="hostnamectl hostname"
 
-                [ -f "${SSH_ENV}_$(${HOSTNAME_CMD})" ] && source "${SSH_ENV}_$(hostname)" > /dev/null
+                [ -f "${SSH_ENV})" ] && source "${SSH_ENV}" > /dev/null
                 unset HOSTNAME_CMD
 
                 start_agent 0

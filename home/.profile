@@ -2,6 +2,20 @@
 # POSIX profile setup
 #
 
+# Safely guarantee an XDG_RUNTIME_DIR exists on ANY Linux environment
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+    # 1. Check if the OS created the systemd standard path, but just forgot to export it
+    if [ -d "/run/user/$(id -u)" ] && [ -w "/run/user/$(id -u)" ]; then
+        export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+    else
+        # 2. If no systemd, build a secure, local fallback in /tmp
+        export XDG_RUNTIME_DIR="/tmp/run-user-$(id -u)"
+        if [ ! -d "$XDG_RUNTIME_DIR" ]; then
+            mkdir -p -m 0700 "$XDG_RUNTIME_DIR"
+        fi
+    fi
+fi
+
 # Add in local bins
 # Default PATH
 #PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
@@ -27,7 +41,7 @@ export TERMINAL="/usr/bin/alacritty"
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # Where the SSH environment is found
-export SSH_ENV="$HOME/.ssh/environment"
+export SSH_ENV="$XDG_RUNTIME_DIR/ssh_agent.env"
 
 # Setup default prompt (Changes if using prompt.sh file)
 export PS1='\$ '

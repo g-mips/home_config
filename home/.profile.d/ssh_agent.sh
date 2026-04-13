@@ -15,22 +15,17 @@ pid_check () {
 }
 
 enviornment_check () {
-    local HOSTNAME_CMD=
-    command -v hostname > /dev/null 2>&1 && HOSTNAME_CMD="hostname"
-    [ -z "$HOSTNAME_CMD" ] && command -v hostnamectl > /dev/null 2>&1 && HOSTNAME_CMD="hostnamectl hostname"
-
     # First let's check to see if our SSH environment file exists. Side note:
-    # We are saving the environment with the hostname appended on because
-    # we could be saving the file into a shared place across machines (like
-    # a NFS share). This way we don't clobber other machines SSH agent
-    # environments.
+    # The SSH_ENV should be somewhere local to this machine. Like the XDG_RUNTIME_DIR.
+    # If you home directory is an NFS mount, this will not work.
+    # This way we don't clobber other machines SSH agent environments.
     #
     # If the file does exist, let's recheck the SSH_AUTH_SOCK and then do our
     # PID check. If the file doesn't exist or the socket or PID check fails for
     # some reason, then we will need to just start the agent.
-    if [ -f "${SSH_ENV}_$($HOSTNAME_CMD)" ]
+    if [ -f "${SSH_ENV}" ]
     then
-        source "${SSH_ENV}_$($HOSTNAME_CMD)" > /dev/null
+        source "${SSH_ENV}" > /dev/null
 
         # We might still not have a valid socket at this point.
         if [ ! -S "$SSH_AUTH_SOCK" ]
@@ -52,18 +47,24 @@ enviornment_check () {
 }
 
 start_agent () {
-    local HOSTNAME_CMD=
-    command -v hostname > /dev/null 2>&1 && HOSTNAME_CMD="hostname"
-    [ -z "$HOSTNAME_CMD" ] && command -v hostnamectl > /dev/null 2>&1 && HOSTNAME_CMD="hostnamectl hostname"
-
     START_AGENT=$1
     if [ "$START_AGENT" != "1" ]
     then
+        ssh-add -l >/dev/null 2>&1
+        # Let's first check if we are even communicating with an agent.
+        # Exit code of 2 means there is no agent. 1 means there is an agent,
+        # but no added keys. 0 means there is an agent and added keys.
+        #
+        # This could be GNOME Keyring, an SSH forwarded agent, or our own.
+        # We don't care, we just trust it.
+        if [ $? -ne 2 ]
+        then
+            START_AGENT=0
         # Let's check to see if SSH_AUTH_SOCK has a socket loaded in already.
         # We do this before loading in our enviornment because an SSH session
         # could have already forwarded the keys or the desktop enviornment might
         # be taking care of things for us.
-        if [ ! -S "$SSH_AUTH_SOCK" ]
+        elif [ ! -S "$SSH_AUTH_SOCK" ]
         then
             # If we get here, that means no valid socket is defined in SSH_AUTH_SOCK.
             # Let's check our environment first and make sure there isn't an ssh-agent
@@ -105,12 +106,18 @@ start_agent () {
         [ ! -z "$SSH_AGENT_PIDS" ] && kill -9 $SSH_AGENT_PIDS
 
         # Now let's start up a new ssh-agent and save off the environment
-        /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}_$($HOSTNAME_CMD)"
-        chmod 600 "${SSH_ENV}_$($HOSTNAME_CMD)"
+        /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+        chmod 600 "${SSH_ENV}"
 
         # Load in our new settings
-        . "${SSH_ENV}_$($HOSTNAME_CMD)" > /dev/null
+        . "${SSH_ENV}" > /dev/null
     fi
 }
 
-start_agent 0
+# Only run the agent logic if we are in an interactive shell
+case $- in
+    *i*) start_agent 0 ;;
+      *) # We are in a non-interactive shell (like a GUI login manager).
+         # Do nothing and let GNOME/KDE handle their own business.
+         ;;
+esac
