@@ -235,17 +235,16 @@ dir_is_git_repo () {
 
 # TODO(Grant): git rev-parse --verify --quiet refs/stash >/dev/null
 prompt () {
-    # This has to be first. I need to get the exit code of the last command ran
-    local PROMPT_EXIT_CODE="$?"
     local EXIT_COLOR=$GREEN
-
     if [ $PROMPT_EXIT_CODE != 0 ]
     then
         EXIT_COLOR=$RED
     fi
 
     . $CACHE_FILE
-    . ~/.profile.d/ud.sh
+    . ~/.shrc.d/ud.sh
+
+    ssh-add -l > /dev/null || printf "WARN: 'ssh-add' has not been run for this session.\n" && :
 
     __add_to_prompt () {
         __TRUE_PROMPT__+="${OPENING_BRACKET}${1}${CLOSING_BRACKET}"
@@ -372,7 +371,7 @@ prompt () {
 # Setup the prompt based on the shell we are using
 [ -z "$BASH" -a -z "$ZSH_VERSION" ] && \
     PS1="$(printf "$PURPLE$USER$FULL_RESET@$YELLOW$HOSTNAME$FULL_RESET $ ")"
-[ ! -z "$BASH" ] && PROMPT_COMMAND="${PROMPT_COMMAND}$([ -n "$PROMPT_COMMAND" -a "${PROMPT_COMMAND: -1:1}" != ";" ] && printf ";")prompt;"
+[ ! -z "$BASH" ] && PROMPT_COMMAND="PROMPT_EXIT_CODE=\$?;${PROMPT_COMMAND}$([ -n "$PROMPT_COMMAND" -a "${PROMPT_COMMAND: -1:1}" != ";" ] && printf ";")prompt;unset PROMPT_EXIT_CODE;"
 [ ! -z "$ZSH_VERSION" ] && precmd () { prompt; }
 
 unset NUM_COLORS

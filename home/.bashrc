@@ -25,10 +25,21 @@ fi
 # Turn off CTRL-S and CTRL-Q. They are annoying and unneeded (in most cases).
 stty -ixon
 
-# Load profiles from ~/.profile.d
-if test -d ~/.profile.d/; then
-    for profile in ~/.profile.d/*.sh; do
-        test -r "$profile" && . "$profile"
+# Empty out the PROMPT_COMMAND
+PROMPT_COMMAND=
+
+# Load scripts from ~/.shrc.d
+if test -d ~/.shrc.d/; then
+    for script in ~/.shrc.d/*.sh; do
+        test -r "$script" && . "$script"
     done
-    unset profile
+    unset script
+fi
+
+# Load scripts from ~/.bashrc.d
+if test -d ~/.bashrc.d/; then
+    for script in ~/.bashrc.d/*.sh; do
+        test -r "$script" && . "$script"
+    done
+    unset script
 fi

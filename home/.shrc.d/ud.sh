@@ -10,8 +10,10 @@ then
     if [ -z "$TMUX" ]
     then
         echo $DISPLAY > $XDG_RUNTIME_DIR/tmux/display_var
+        echo $WAYLAND_DISPLAY > $XDG_RUNTIME_DIR/tmux/wayland_display_var
     else
         export DISPLAY=$(cat $XDG_RUNTIME_DIR/tmux/display_var)
+        export WAYLAND_DISPLAY=$(cat $XDG_RUNTIME_DIR/tmux/wayland_display_var)
         REAL_SSH_CONNECTION=$(tmux show-environment 2> /dev/null | grep -E "^SSH_CONNECTION=" | cut -d'=' -f2)
         if [ "$SSH_CONNECTION" != "$REAL_SSH_CONNECTION" ]
         then

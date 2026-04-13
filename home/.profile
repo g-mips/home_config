@@ -8,9 +8,9 @@
 export PATH=${HOME}/.local/sbin:${HOME}/.local/bin:${HOME}/.local/games:${PATH}
 
 # Setup Editors
-export EDITOR='/usr/bin/vim'
-export VISUAL='/usr/bin/vim'
-export ALTERNATE_EDITOR='/usr/bin/vi'
+export EDITOR='gvim -v'
+export VISUAL='gvim -v'
+export ALTERNATE_EDITOR='vim'
 
 # Setup browser
 BROWSER="$(command -v zen-browser)"
@@ -22,14 +22,6 @@ export PAGER='/usr/bin/less'
 
 # Setup terminal
 export TERMINAL="/usr/bin/alacritty"
-
-# don't put duplicate lines or lines starting with space in the history.
-# See bash(1) for more options
-export HISTCONTROL=ignoreboth
-
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-export HISTSIZE=1000
-export HISTFILESIZE=2000
 
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
@@ -45,10 +37,20 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_STATE_HOME="$HOME/.local/state"
-[ -z "${XDG_RUNTIME_DIR}" ] && export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+#[ -z "${XDG_RUNTIME_DIR}" ] && export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+
+TMP_XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority"
+
+# If the system's $XAUTHORITY file exists and is different from ours...
+if [ -f "$XAUTHORITY" ] && [ "$XAUTHORITY" != "$TMP_XAUTHORITY" ]
+then
+    rm -f $TMP_XAUTHORITY
+    ln -sf "$XAUTHORITY" "$TMP_XAUTHORITY"
+fi
 
 # ~/ Cleanup
-export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority"
+export XAUTHORITY="$TMP_XAUTHORITY"
+unset TMP_XAUTHORITY
 export LESSHISTFILE="-"
 export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc.conf"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
@@ -74,46 +76,10 @@ export TMUX_TMPDIR="$XDG_RUNTIME_DIR/tmux"
 export PASSWORD_STORE_DIR="$XDG_CONFIG_HOME/password-store"
 export QT_QPA_PLATFORMTHEME="qt5ct"
 
-# Are we in a WSL environment?
-if [ ! -z "$WSLENV" ]
-then
-    uname -a | grep -q WSL2
-    if [ $? -eq 0 ]
-    then
-        #export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
-        export PULSE_SERVER=tcp:$(grep nameserver /etc/resolv.conf | awk '{print $2}');
-
-        # IP addresses for currently running Linux and Windows systems
-        LINUX_IP=$(ip addr show eth0 | awk '/inet / && !/127.0.0.1/ {split($2,a,"/"); print a[1]}')
-        WINDOWS_IP=$(ip route | awk '/^default/ {print $3}')
-
-        # IP addresses in current windows defender firewall rule
-        # netsh outputs line of "^(Local|Remote)IP:\s+IPADDR/32$" so get second field of
-        # 'IPADDR/32' and split it on '/' then just print IPADDR
-        FIREWALL_WINDOWS_IP=$(netsh.exe advfirewall firewall show rule name=X11-Forwarding | awk '/^LocalIP/ {split($2,a,"/");print a[1]}')
-        FIREWALL_LINUX_IP=$(netsh.exe advfirewall firewall show rule name=X11-Forwarding | awk '/^RemoteIP/ {split($2,a,"/");print a[1]}')
-
-        # Update firewall rule if firewall rules IPs don't match actual ones
-        if [ "$FIREWALL_LINUX_IP" != "$LINUX_IP" ] || [ "$WINDOWS_IP" != "$FIREWALL_WINDOWS_IP" ]
-        then
-                powershell.exe -Command "Start-Process netsh.exe -ArgumentList \"advfirewall firewall set rule name=X11-Forwarding new localip=$WINDOWS_IP remoteip=$LINUX_IP \" -Verb RunAs -WindowStyle Hidden"
-                printf '\033]0;%s\007' "Arch"
-        fi
-
-        # Appropriately set DISPLAY to Windows X11 server
-        DISPLAY="$WINDOWS_IP:0"
-
-        # Tell X11 programs to render on Windows, not linux, side
-        # docs: https://docs.mesa3d.org/envvars.html
-        LIBGL_ALWAYS_INDIRECT=1
-
-        export DISPLAY LIBGL_ALWAYS_INDIRECT
-    else
-        export DISPLAY=:0
-    fi
-
-    xrdb ~/.config/xwindowsystem/Xresources
-
-    # Other WSL notes:
-    # - Install font for Windows Terminal to use: winget install --id=DEVCOM.JetBrainsMonoNerdFont -e
+# Load scripts from ~/.profile.d
+if test -d ~/.profile.d/; then
+    for script in ~/.profile.d/*.sh; do
+        test -r "$script" && . "$script"
+    done
+    unset script
 fi
