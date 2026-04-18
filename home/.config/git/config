@@ -22,6 +22,9 @@
 	dc = diff --cached
 	fp = fetch -p
 	sp = stash pop
+	rf = !GIT_SEQUENCE_EDITOR=true git rebase -i --autosquash
+	mr = push -o merge_request.create -o merge_request.target=master -o merge_request.remove_source_branch origin HEAD
+	unmerged = diff --name-only --diff-filter=U
 
 [core]
 	editor = vim
@@ -34,6 +37,10 @@
 
 [diff]
 	tool = vimdiff
+	algorithm = histogram
+	colorMoved = plain
+	mnemonicPrefix = true
+	renames = true
 
 [difftool]
 	prompt = false
@@ -44,6 +51,8 @@
 
 [mergetool]
 	prompt = false
+	trustExitCode = true
+	keepBackup = false
 
 [grep]
 	lineNumber = true
